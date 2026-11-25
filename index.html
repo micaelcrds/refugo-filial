@@ -127,7 +127,8 @@ footer span{color:var(--muted);font-size:12px}
     <h1>Refugo Filial · Tutiplast · Injeção Termoplástica</h1>
     <div class="brand-right">
       <span id="hdr-meta"><i class="status-dot" id="sync-dot"></i> <span id="hdr-text">01/01/2026 a 11/11/2026 · 679 produtos ativos · clientes · 31 causas</span></span>
-      <button class="btn-export" id="btn-export-xlsx" title="Exportar base consolidada atual para Excel (.xlsx)" disabled>↓ Baixar Relatório</button>
+      <button class="btn-export" id="btn-export-xlsx" title="Exportar base consolidada atual para Excel (.xlsx)" disabled>↓ Baixar Planilha</button>
+      <button class="btn-export" id="btn-export-html" title="Baixar cópia offline da apresentação (.html) com os dados atuais" disabled>↓ Baixar Relatório</button>
       <button class="btn-import" id="btn-open-import" title="Importar relatório R086 (.xls ou .xlsx) do INJET">↑ Atualizar Base (INJET)</button>
     </div>
   </div>
@@ -618,6 +619,7 @@ function computeAnalytics(payload){
   });
 
   return {
+    rawPayload: payload,
     rawProducts: prodsAll,
     rawItems: itemsAll,
     parseProdMeta,
@@ -652,6 +654,7 @@ function renderAll(payload){
     ? 'Base vazia · Nenhum dado importado na planilha'
     : `${S.periodoInicio} a ${S.periodoFim} · ${S.activeCount} produtos ativos · ${S.famCount} clientes · ${S.causesCount} causas`;
   $('#btn-export-xlsx').disabled = isEmpty;
+  $('#btn-export-html').disabled = isEmpty;
 
   // Slide 1: KPIs
   $('#k-prod').textContent = (S.totalProd / 1e6).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' M';
@@ -1426,6 +1429,47 @@ function exportReportXlsx(){
 }
 
 $('#btn-export-xlsx').onclick = exportReportXlsx;
+
+function exportReportHtml(){
+  if (!STATE || !STATE.rawPayload || !STATE.rawProducts || STATE.rawProducts.length === 0) return;
+  const S = STATE;
+  // Serializa o estado atual para gerar um arquivo HTML autônomo (offline-ready)
+  const snapshotPayload = {
+    ok: true,
+    periodoInicio: S.periodoInicio,
+    periodoFim: S.periodoFim,
+    ultimaAtualizacao: S.ultimaAtualizacao || new Date().toISOString(),
+    products: S.rawProducts,
+    items: S.rawItems
+  };
+  const serialized = JSON.stringify(snapshotPayload).replace(/<\/script/gi, '<\\/script');
+
+  let docHtml = '<!doctype html>\n' + document.documentElement.outerHTML;
+  // Substitui INITIAL_PAYLOAD pelo snapshot atual para abrir offline já preenchido
+  docHtml = docHtml.replace(
+    /const INITIAL_PAYLOAD\s*=\s*[\s\S]*?;\s*\n/,
+    `const INITIAL_PAYLOAD = ${serialized};\n`
+  );
+  // Remove marcações dinâmicas geradas em tempo de execução nos containers para evitar duplicação antes do boot()
+  docHtml = docHtml.replace(/<nav id="nav"[^>]*>[\s\S]*?<\/nav>/, '<nav id="nav" role="tablist" aria-label="Slides"></nav>');
+  docHtml = docHtml.replace(/<div class="modal-backdrop open"/g, '<div class="modal-backdrop"');
+
+  const safeIni = String(S.periodoInicio || "").replace(/\//g, ".");
+  const safeFim = String(S.periodoFim || "").replace(/\//g, ".");
+  const fileName = `APRESENTACAO_REFUGO_FILIAL_${safeIni}_ATE_${safeFim}.html`;
+
+  const blob = new Blob([docHtml], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+$('#btn-export-html').onclick = exportReportHtml;
 
 /* ============================================================================
    NAVEGAÇÃO E INICIALIZAÇÃO
