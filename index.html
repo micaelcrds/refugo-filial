@@ -906,10 +906,20 @@ function parseInjetWorkbook(workbook, fileName){
   const sh = workbook.Sheets[workbook.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(sh, { header: 1, defval: "" });
 
+  function toNum(v){
+    if (typeof v === "number") return isFinite(v) ? v : 0;
+    const s = String(v ?? "").trim();
+    if (!s) return 0;
+    if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) return Number(s.replace(/\./g, "").replace(",", ".")) || 0;
+    if (/^-?\d+,\d+$/.test(s)) return Number(s.replace(",", ".")) || 0;
+    const n = Number(s);
+    return isFinite(n) ? n : 0;
+  }
+
   let dataInicio = "", dataFim = "";
-  for (let r = 0; r < Math.min(15, rows.length); r++) {
-    const v0 = String(rows[r][0] || "").trim();
-    const m = /PERÍODO:\s*(\d{2}\/\d{2}\/\d{4})\s*-\s*(\d{2}\/\d{2}\/\d{4})/i.exec(v0);
+  for (let r = 0; r < Math.min(20, rows.length); r++) {
+    const line = rows[r].join(" ");
+    const m = /PERÍODO:\s*(\d{2}\/\d{2}\/\d{4})\s*-\s*(\d{2}\/\d{2}\/\d{4})/i.exec(line);
     if (m) {
       dataInicio = m[1].split('/').reverse().join('-');
       dataFim = m[2].split('/').reverse().join('-');
@@ -936,28 +946,29 @@ function parseInjetWorkbook(workbook, fileName){
     if (v0 === "QTD. PRODUZIDA (D)" || v0 === "QTD. REFUGADA (E)" || v0 === "QTD. LÍQUIDA" || v0 === "% DE REFUGO (E/D)") continue;
 
     const c2 = row[2];
-    const isNumProd = (typeof c2 === "number") || (c2 !== "" && !isNaN(Number(c2)));
+    const c2Str = String(c2 ?? "").trim();
+    const isNumProd = (typeof c2 === "number" && isFinite(c2)) || (c2Str !== "" && !isNaN(toNum(c2Str)) && /^[\d.,-]+$/.test(c2Str));
 
     if (isNumProd) {
       curProd = {
         prodLines: [v0],
-        qtdProd: Number(row[2]) || 0,
-        qtdRef: Number(row[3]) || 0,
-        qtdLiq: Number(row[4]) || 0,
-        pctRef: Number(row[5]) || 0,
+        qtdProd: toNum(row[2]),
+        qtdRef: toNum(row[3]),
+        qtdLiq: toNum(row[4]),
+        pctRef: toNum(row[5]),
         items: []
       };
       rawProducts.push(curProd);
       curProd.items.push({
         refLines: [String(row[7] || "").trim()],
         causa: String(row[8] || "").trim(),
-        qtdRef: Number(row[9]) || 0
+        qtdRef: toNum(row[9])
       });
     } else if (String(row[8] || "").trim() !== "" && curProd) {
       curProd.items.push({
         refLines: [String(row[7] || "").trim()],
         causa: String(row[8] || "").trim(),
-        qtdRef: Number(row[9]) || 0
+        qtdRef: toNum(row[9])
       });
     } else if (curProd) {
       if (v0 !== "") curProd.prodLines.push(v0);
