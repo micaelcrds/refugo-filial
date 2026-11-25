@@ -166,10 +166,10 @@ footer span{color:var(--muted);font-size:12px}
     <div style="display:grid;gap:16px">
       <div class="panel"><h3 id="h-par5">Classe A do Pareto · 472.243 pç (80,99%)</h3>
         <div class="tablewrap"><table id="t-par5"></table></div></div>
-      <div class="panel" style="border-color:#4b3d7a;background:#16142a"><h3 style="color:var(--violet)">Achado: Contaminação 7ª → 2ª</h3>
-        <p style="margin:0;color:var(--ink-2)" id="p-contam">Na Honda era a 7ª causa. Na filial vale <strong style="color:var(--ink)">86.921 pç (14,91%)</strong> e ultrapassa Regulagem. Painéis de ar-condicionado e linha branca em resinas brancas e claras (HIPS, ABS, GPPS) reprovam com qualquer ponto preto.</p></div>
-      <div class="panel alert"><h3>Alerta: “Refugo Não Digitado”</h3>
-        <p style="margin:0;color:var(--ink-2)" id="p-naodig"><strong class="warn-t">14.681 pç · 2,52%</strong> em 238 produtos. A perda sem causa informada impede a ação corretiva.</p></div>
+      <div class="panel" style="border-color:#4b3d7a;background:#16142a"><h3 style="color:var(--violet)" id="h-contam">Achado: Contaminação 7ª → 2ª</h3>
+        <p style="margin:0;color:var(--ink-2)" id="p-contam"></p></div>
+      <div class="panel alert"><h3 id="h-naodig">Alerta: “Refugo Não Digitado”</h3>
+        <p style="margin:0;color:var(--ink-2)" id="p-naodig"></p></div>
     </div>
   </div>
 </section>
@@ -203,15 +203,8 @@ footer span{color:var(--muted);font-size:12px}
 <!-- SLIDE 5 -->
 <section class="slide" id="s5">
   <p class="eyebrow">Top 5 causas por produto · Detalhamento</p>
-  <h2>Os 10 produtos líderes seguem três perfis de falha, cada um com ação própria</h2>
-  <div class="grid g3" style="margin-bottom:16px">
-    <div class="panel" style="border-color:#4b3d7a"><span class="pill" style="background:#2a2350;color:var(--violet)">Perfil A</span><h3 style="margin-top:8px">Painéis claros de climatização: crise de Contaminação</h3>
-      <ul class="ex"><li><strong>Contaminação dominante (35% a 65%):</strong> resinas claras (HIPS, ABS, GPPS) reprovam por pontos pretos e contaminação cruzada.</li><li><strong>Ação prioritária:</strong> vedação de funis, purga química padronizada e limpeza de pontos mortos.</li></ul></div>
-    <div class="panel" style="border-color:#6b4a1c"><span class="pill w">Perfil B</span><h3 style="margin-top:8px">Peças estéticas Honda e blendas PC/ABS: Mancha, Espirrado, Regulagem</h3>
-      <ul class="ex"><li><strong>Defeitos superficiais e umidade:</strong> Mancha, Espirrado e Risco concentram as perdas nas tampas, paralamas e peças PC/ABS.</li><li><strong>Ação prioritária:</strong> auditoria de desumidificadores (ponto de orvalho), purga e contenção de óleo no molde.</li></ul></div>
-    <div class="panel" style="border-color:#1d5f60"><span class="pill a">Perfil C</span><h3 style="margin-top:8px">Peça estrutural de grande porte: Falha de Injeção</h3>
-      <ul class="ex"><li><strong>Preenchimento incompleto:</strong> Falha de Injeção supera 60% nos itens de maior fluxo.</li><li><strong>Ação prioritária:</strong> revisão de janela de processo, comutação V/P, saídas de gás e pressão de recalque.</li></ul></div>
-  </div>
+  <h2 id="h5">Os 10 produtos líderes seguem três perfis de falha, cada um com ação própria</h2>
+  <div class="grid g3" style="margin-bottom:16px" id="cards-perfis"></div>
   <div class="panel"><h3>Top 5 causas por produto</h3>
     <div class="tablewrap"><table id="t-top5"></table></div>
     <p class="note">Clique em uma linha para abrir as “Demais Causas” completas do produto.</p></div>
@@ -233,22 +226,22 @@ footer span{color:var(--muted);font-size:12px}
   <div class="panel"><div class="tablewrap"><table class="fw5">
     <tr><th>O quê</th><th>Por quê</th><th>Onde</th><th>Como (ação técnica)</th><th>Quem</th><th>Quando</th><th>Meta e custo</th></tr>
     <tr><td><strong>1 · Bloqueio de contaminação em resinas claras</strong></td>
-      <td>Contaminação é a 2ª causa da filial (~14,9% do refugo total), concentrada nos painéis claros.</td>
+      <td id="td-7-1">Contaminação é a 2ª causa da filial (~14,9% do refugo total), concentrada nos painéis claros.</td>
       <td>Famílias 692, 123, 121 e 028 (Painéis Frontais, Grades de Entrada de Ar e Decors).</td>
       <td>Vedar e limpar funis e linhas de alimentação. Rotina padronizada de purga química em troca de cor ou material. Inspecionar pontos mortos de plastificação (rosca, canhão, bico).</td>
       <td>Engenharia de Processos, Produção, Qualidade</td><td>Rotina em 30 dias; auditoria semanal</td><td class="goal">−40% a −50% de Contaminação nas famílias-alvo. Custo médio (purga e vedação).</td></tr>
     <tr><td><strong>2 · Estufagem e desumidificação em PC/ABS; limpeza de molde e canhão</strong></td>
-      <td>Mancha + Espirrado somam ~12,8% do refugo global, além de ocorrências de Sujo de Óleo.</td>
+      <td id="td-7-2">Mancha + Espirrado somam ~12,8% do refugo global, além de ocorrências de Sujo de Óleo.</td>
       <td>Famílias 846 (Ornamento Lateral e Alça Superior PC/ABS) e 110 (tampas e paralamas Honda).</td>
       <td>Auditar ponto de orvalho, temperatura e tempo de secagem dos desumidificadores. Conter Sujo de Óleo no molde. Rotina de purga para eliminar Mancha.</td>
       <td>Engenharia de Processos, Manutenção, Ferramentaria</td><td>Auditoria em 30 dias; padrão em 60</td><td class="goal">−35% a −50% em Mancha e Espirrado. Custo baixo a médio.</td></tr>
     <tr><td><strong>3 · Estabilização de janela de processo e partida de máquina</strong></td>
-      <td>Falha de Injeção + Regulagem representam mais de 53% de todo o refugo da filial.</td>
+      <td id="td-7-3">Falha de Injeção + Regulagem representam mais de 53% de todo o refugo da filial.</td>
       <td>Todas as famílias, começando por 110, 692, 096, 846 e 123.</td>
       <td>Padronizar ficha técnica: comutação V/P, almofada, recalque, temperatura do molde, limpeza de saídas de gás. Revisar resfriamento e extração para Deformação.</td>
       <td>Engenharia de Processos, Ferramentaria, Líder de Produção</td><td>Diagnóstico em 30 dias; padrão em 90</td><td class="goal">−25% a −35% nas duas causas. Custo baixo (horas de engenharia e manutenção de molde).</td></tr>
     <tr><td><strong>4 · Rastreabilidade de apontamento</strong></td>
-      <td>Refugo Não Digitado (14.681 pç em 238 produtos) impede identificar a causa raiz.</td>
+      <td id="td-7-4">Refugo Não Digitado (14.681 pç em 238 produtos) impede identificar a causa raiz.</td>
       <td>Terminais das injetoras e tablets do chão de fábrica.</td>
       <td>Travar o fechamento de turno nos tablets/terminais sem classificação de refugo. Auditoria diária pelo líder.</td>
       <td>Produção, TI industrial, Qualidade</td><td>Piloto em 15 dias; toda a filial em 45</td><td class="goal">Zerar Refugo Não Digitado. Custo baixo.</td></tr>
@@ -442,18 +435,32 @@ function computeAnalytics(payload){
     pm.set(name, (pm.get(name) || 0) + qtd);
   });
 
-  // Principais causas por família
+  // Principais causas por família e ranking interno da Honda (110)
   const famCauseMap = new Map();
+  const causeFamMap = new Map();
   itemsAll.forEach(it => {
     const rawRef = String(it.refugo || '').trim();
     if (!rawRef || rawRef.startsWith('***')) return;
     const mCode = /^(\d{6})\s+(.+)$/.exec(rawRef);
     const name = mCode ? mCode[2].replace(/\s+/g, ' ').trim() : rawRef;
     const fam = parseProdMeta(it.produto).fam;
+    const qtd = Number(it.qtdRef) || 0;
     if (!famCauseMap.has(fam)) famCauseMap.set(fam, new Map());
     const fm = famCauseMap.get(fam);
-    fm.set(name, (fm.get(name) || 0) + (Number(it.qtdRef) || 0));
+    fm.set(name, (fm.get(name) || 0) + qtd);
+
+    if (!causeFamMap.has(name)) causeFamMap.set(name, new Map());
+    const cf = causeFamMap.get(name);
+    cf.set(fam, (cf.get(fam) || 0) + qtd);
   });
+
+  const hondaRankMap = new Map();
+  const hondaCauses = famCauseMap.get('110');
+  if (hondaCauses) {
+    Array.from(hondaCauses.entries())
+      .sort((a,b) => b[1] - a[1])
+      .forEach(([nm], idx) => hondaRankMap.set(nm, idx + 1));
+  }
   famList.forEach(f => {
     const fm = famCauseMap.get(f.fam);
     if (!fm || f.ref === 0) { f.topCausesStr = '—'; return; }
@@ -548,7 +555,7 @@ function computeAnalytics(payload){
     honda: { prods: hondaProds.length, prod: hProd, ref: hRef, idx: hProd>0 ? (hRef/hProd)*100 : 0 },
     outros: { prods: otherProds.length, prod: oProd, ref: oRef, idx: oProd>0 ? (oRef/oProd)*100 : 0 },
     stProdQtd, stProdLiq, stProdRef, stProdIdx, stFamProd, stFamRef, stFamIdx, stCauRef, stCauPct,
-    causesList, totalCauseRef,
+    causesList, totalCauseRef, hondaRankMap, causeFamMap,
     top10Vol, top10Idx,
     heatLabels, heatMatrix,
     top5List,
@@ -638,13 +645,34 @@ function renderAll(payload){
       return `<tr class="${isCont?'hl':''}"><td class="l">${c.name} · ${c.code}</td><td>${fmt(c.qtd)}</td><td>${pc((c.qtd/S.totalCauseRef)*100)}</td><td>${pc((cumC/S.totalCauseRef)*100)}</td><td>${c.prodsCount}</td></tr>`;
     }).join('');
 
-  const contObj = S.causesList.find(c=>c.name.includes('CONTAMINA'));
-  if (contObj) {
-    $('#p-contam').innerHTML = `Na Honda era a 7ª causa. Na filial vale <strong style="color:var(--ink)">${fmt(contObj.qtd)} pç (${pc((contObj.qtd/S.totalCauseRef)*100)})</strong>. Painéis de ar-condicionado e linha branca em resinas brancas e claras (HIPS, ABS, GPPS) reprovam com qualquer ponto preto.`;
+  // Card dinâmico da 2ª causa do Pareto
+  const c2Obj = S.causesList[1];
+  const c3Obj = S.causesList[2];
+  if (c2Obj) {
+    const hRank = S.hondaRankMap.get(c2Obj.name);
+    const titleC2 = c2Obj.name.toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase());
+    $('#h-contam').textContent = hRank
+      ? `Achado: ${titleC2} (${hRank}ª na Honda → 2ª na filial)`
+      : `Destaque Pareto: ${titleC2} em 2º lugar`;
+    const cfMap = S.causeFamMap.get(c2Obj.name);
+    const topFamsC2 = cfMap
+      ? Array.from(cfMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([f,q])=>`${f} (${fmt(q)} pç)`).join(', ')
+      : '';
+    const cmpC3 = c3Obj ? ` e supera ${c3Obj.name} (${pc((c3Obj.qtd/S.totalCauseRef)*100)})` : '';
+    const hondaIntro = hRank ? `Na Honda (família 110) ocupava a ${hRank}ª posição. ` : '';
+    const famTrail = topFamsC2 ? ` Principais famílias: ${topFamsC2}.` : '';
+    $('#p-contam').innerHTML = `${hondaIntro}Na filial soma <strong style="color:var(--ink)">${fmt(c2Obj.qtd)} pç (${pc((c2Obj.qtd/S.totalCauseRef)*100)})</strong>${cmpC3}.${famTrail}`;
   }
-  const ndObj = S.causesList.find(c=>c.name.includes('NÃO DIGITADO'));
+
+  // Card dinâmico de Refugo Não Digitado
+  const ndIdx = S.causesList.findIndex(c=>c.name.includes('NÃO DIGITADO'));
+  const ndObj = ndIdx >= 0 ? S.causesList[ndIdx] : null;
   if (ndObj) {
+    $('#h-naodig').textContent = `Alerta: ${ndIdx + 1}ª causa é “Refugo Não Digitado”`;
     $('#p-naodig').innerHTML = `<strong class="warn-t">${fmt(ndObj.qtd)} pç · ${pc((ndObj.qtd/S.totalCauseRef)*100)}</strong> em ${ndObj.prodsCount} produtos. A perda sem causa informada impede a ação corretiva.`;
+  } else {
+    $('#h-naodig').textContent = 'Rastreabilidade: Sem Refugo Não Digitado';
+    $('#p-naodig').innerHTML = 'Todos os apontamentos do período possuem causa classificada.';
   }
 
   // Slide 3: Rankings
@@ -692,6 +720,86 @@ function renderAll(payload){
     const d = $('#d' + r.dataset.r);
     d.hidden = !d.hidden;
   });
+
+  // Cards dinâmicos dos 3 Perfis de Falha (Slide 5)
+  const profGroups = { A: [], B: [], C: [] };
+  S.top5List.forEach(item => {
+    if (profGroups[item.perfil]) profGroups[item.perfil].push(item);
+  });
+  const activeProfilesCount = Object.values(profGroups).filter(g => g.length > 0).length;
+  $('#h5').textContent = `Os ${S.top5List.length} produtos líderes se distribuem em ${activeProfilesCount} ${activeProfilesCount === 1 ? 'perfil' : 'perfis'} de falha, cada um com ação própria`;
+
+  const profMeta = [
+    {
+      key: 'A',
+      border: '#4b3d7a',
+      pillStyle: 'background:#2a2350;color:var(--violet)',
+      pillLabel: 'Perfil A',
+      title: 'Alta Contaminação (≥ 30%): resinas claras e sensíveis',
+      action: 'vedação de funis, purga química padronizada e limpeza de pontos mortos.'
+    },
+    {
+      key: 'B',
+      border: '#6b4a1c',
+      pillStyle: '',
+      pillClass: 'w',
+      pillLabel: 'Perfil B',
+      title: 'Multicausas / Superfície: Mancha, Espirrado e Regulagem',
+      action: 'auditoria de desumidificadores (ponto de orvalho), purga e contenção de óleo.'
+    },
+    {
+      key: 'C',
+      border: '#1d5f60',
+      pillStyle: '',
+      pillClass: 'a',
+      pillLabel: 'Perfil C',
+      title: 'Falha de Injeção dominante (≥ 60%): preenchimento',
+      action: 'revisão de janela de processo, comutação V/P, saídas de gás e recalque.'
+    }
+  ];
+
+  $('#cards-perfis').innerHTML = profMeta.map(pm => {
+    const grp = profGroups[pm.key];
+    const grpSum = grp.reduce((a, x) => a + x.prod.qtdRef, 0);
+    const pillHtml = pm.pillStyle
+      ? `<span class="pill" style="${pm.pillStyle}">${pm.pillLabel}</span>`
+      : `<span class="pill ${pm.pillClass}">${pm.pillLabel}</span>`;
+
+    if (!grp.length) {
+      return `<div class="panel" style="border-color:${pm.border};opacity:.72">${pillHtml}<h3 style="margin-top:8px">${pm.title}</h3><p style="margin:0;color:var(--muted);font-size:13px">Nenhum produto do Top 10 atual se enquadra neste perfil.</p></div>`;
+    }
+
+    const itemsBullets = grp.slice(0, 4).map(x => {
+      const top1 = x.top5[0] ? `${x.top5[0][0]} ${x.top5[0][1]}` : '';
+      const top2 = x.top5[1] ? `, ${x.top5[1][0]} ${x.top5[1][1]}` : '';
+      return `<li><strong>${x.prod.code} - ${x.prod.desc}:</strong> ${top1}${top2}.</li>`;
+    }).join('');
+    const extraNote = grp.length > 4 ? `<li><strong>+${grp.length - 4} item(ns) no perfil</strong> (total do grupo: ${fmt(grpSum)} pç).</li>` : '';
+
+    return `<div class="panel" style="border-color:${pm.border}">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">${pillHtml}<span style="font-size:11px;color:var(--muted)">${grp.length} prod. · ${fmt(grpSum)} pç</span></div>
+      <h3 style="margin-top:8px">${pm.title}</h3>
+      <ul class="ex">${itemsBullets}${extraNote}<li><strong>Ação prioritária:</strong> ${pm.action}</li></ul>
+    </div>`;
+  }).join('');
+
+  // Atualizar justificativas numéricas do Slide 7 (Plano 5W2H)
+  const getCauQtd = kw => {
+    const f = S.causesList.find(c => c.name.includes(kw));
+    return f ? f.qtd : 0;
+  };
+  const qCont = getCauQtd('CONTAMINA');
+  const rCont = S.causesList.findIndex(c => c.name.includes('CONTAMINA'));
+  if (rCont >= 0) {
+    $('#td-7-1').textContent = `Contaminação é a ${rCont + 1}ª causa da filial (${fmt(qCont)} pç · ${pc((qCont/S.totalCauseRef)*100)}), concentrada nos painéis claros.`;
+  }
+  const qManEsp = getCauQtd('MANCHA') + getCauQtd('ESPIRRADO');
+  $('#td-7-2').textContent = `Mancha + Espirrado somam ${fmt(qManEsp)} pç (${pc((qManEsp/S.totalCauseRef)*100)}), além de ocorrências de Sujo de Óleo.`;
+  const qFalReg = getCauQtd('FALHA DE INJE') + getCauQtd('REGULAGEM');
+  $('#td-7-3').textContent = `Falha de Injeção + Regulagem somam ${fmt(qFalReg)} pç (${pc((qFalReg/S.totalCauseRef)*100)} do refugo classificado).`;
+  if (ndObj) {
+    $('#td-7-4').textContent = `Refugo Não Digitado (${fmt(ndObj.qtd)} pç · ${pc((ndObj.qtd/S.totalCauseRef)*100)} em ${ndObj.prodsCount} produtos) impede identificar a causa raiz.`;
+  }
 
   // Slide 6: Famílias
   const top10Fam = S.famList.slice(0, 10);
