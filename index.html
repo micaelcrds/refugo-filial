@@ -26,8 +26,11 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var
 .brand h1{font:600 15px var(--font-display);letter-spacing:.02em;margin:0}
 .brand-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .brand span{color:var(--muted);font-size:12px}
-.btn-import{background:var(--surface-2);border:1px solid var(--accent-dim);color:var(--accent);border-radius:4px;padding:5px 11px;font:500 12px var(--font-body);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s}
-.btn-import:hover{background:#163336;border-color:var(--accent)}
+.btn-import,.btn-export{background:var(--surface-2);border:1px solid var(--accent-dim);color:var(--accent);border-radius:4px;padding:5px 11px;font:500 12px var(--font-body);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s}
+.btn-import:hover,.btn-export:hover{background:#163336;border-color:var(--accent)}
+.btn-export{border-color:var(--line);color:var(--ink)}
+.btn-export:hover{border-color:var(--accent);color:var(--accent)}
+.btn-export:disabled{opacity:.4;cursor:not-allowed}
 .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent)}
 .status-dot.syncing{background:var(--warn);animation:pulse 1s infinite}
 @keyframes pulse{50%{opacity:.35}}
@@ -123,7 +126,8 @@ footer span{color:var(--muted);font-size:12px}
   <div class="brand">
     <h1>Refugo Filial · Tutiplast · Injeção Termoplástica</h1>
     <div class="brand-right">
-      <span id="hdr-meta"><i class="status-dot" id="sync-dot"></i> <span id="hdr-text">01/01/2026 a 11/11/2026 · 679 produtos ativos · 28 famílias · 31 causas</span></span>
+      <span id="hdr-meta"><i class="status-dot" id="sync-dot"></i> <span id="hdr-text">01/01/2026 a 11/11/2026 · 679 produtos ativos · clientes · 31 causas</span></span>
+      <button class="btn-export" id="btn-export-xlsx" title="Exportar base consolidada atual para Excel (.xlsx)" disabled>↓ Baixar Relatório</button>
       <button class="btn-import" id="btn-open-import" title="Importar relatório R086 (.xls ou .xlsx) do INJET">↑ Atualizar Base (INJET)</button>
     </div>
   </div>
@@ -142,7 +146,7 @@ footer span{color:var(--muted);font-size:12px}
     <div class="panel kpi hot"><div class="lbl">Índice global</div><div class="val" id="k-idx">1,23%</div><div class="sub" id="k-idx-sub">Período: 01/01/2026 a 11/11/2026</div></div>
   </div>
   <div class="split" style="margin-bottom:16px">
-    <div class="panel"><h3>Honda (família 110) contra as demais famílias</h3>
+    <div class="panel"><h3>Moto Honda contra os demais clientes</h3>
       <div id="cmp" style="display:grid;gap:14px;margin-top:12px"></div>
       <div class="grid g2" style="margin-top:16px">
         <div><div class="lbl" style="color:var(--ink-2);font-size:12px" id="lbl-honda">Índice Honda (252 produtos)</div><div class="val" style="font:700 28px var(--font-display)" id="val-honda">1,16%</div><div class="sub" style="color:var(--muted);font-size:12px" id="sub-honda">227.512 pç em 19,59 M</div></div>
@@ -212,11 +216,11 @@ footer span{color:var(--muted);font-size:12px}
 
 <!-- SLIDE 6 -->
 <section class="slide" id="s6">
-  <p class="eyebrow">Desempenho por família · Agrupamento SAP</p>
-  <h2 id="h6">Cinco famílias concentram mais de 82% do refugo; a 028 tem o maior índice</h2>
+  <p class="eyebrow">Desempenho por cliente · Agrupamento SAP</p>
+  <h2 id="h6">Cinco clientes concentram mais de 82% do refugo; Gree tem o maior índice</h2>
   <div class="panel" style="margin-bottom:16px"><div class="chart tall"><canvas id="c-fam"></canvas></div></div>
   <div class="panel"><div class="tablewrap"><table id="t-fam"></table></div>
-    <p class="note">Códigos de família padronizados em 3 dígitos (2º bloco do código SAP). Índice em vermelho: acima de 2× a média da filial. Âmbar: acima da média.</p></div>
+    <p class="note">Clientes identificados automaticamente pelo 2º bloco do código SAP (código 692 unificado em LG). Índice em vermelho: acima de 2× a média da filial. Âmbar: acima da média.</p></div>
 </section>
 
 <!-- SLIDE 7 -->
@@ -227,17 +231,17 @@ footer span{color:var(--muted);font-size:12px}
     <tr><th>O quê</th><th>Por quê</th><th>Onde</th><th>Como (ação técnica)</th><th>Quem</th><th>Quando</th><th>Meta e custo</th></tr>
     <tr><td><strong>1 · Bloqueio de contaminação em resinas claras</strong></td>
       <td id="td-7-1">Contaminação é a 2ª causa da filial (~14,9% do refugo total), concentrada nos painéis claros.</td>
-      <td>Famílias 692, 123, 121 e 028 (Painéis Frontais, Grades de Entrada de Ar e Decors).</td>
+      <td>LG, Daikin, Whirlpool e Gree (Painéis Frontais, Grades de Entrada de Ar e Decors).</td>
       <td>Vedar e limpar funis e linhas de alimentação. Rotina padronizada de purga química em troca de cor ou material. Inspecionar pontos mortos de plastificação (rosca, canhão, bico).</td>
-      <td>Engenharia de Processos, Produção, Qualidade</td><td>Rotina em 30 dias; auditoria semanal</td><td class="goal">−40% a −50% de Contaminação nas famílias-alvo. Custo médio (purga e vedação).</td></tr>
+      <td>Engenharia de Processos, Produção, Qualidade</td><td>Rotina em 30 dias; auditoria semanal</td><td class="goal">−40% a −50% de Contaminação nos clientes-alvo. Custo médio (purga e vedação).</td></tr>
     <tr><td><strong>2 · Estufagem e desumidificação em PC/ABS; limpeza de molde e canhão</strong></td>
       <td id="td-7-2">Mancha + Espirrado somam ~12,8% do refugo global, além de ocorrências de Sujo de Óleo.</td>
-      <td>Famílias 846 (Ornamento Lateral e Alça Superior PC/ABS) e 110 (tampas e paralamas Honda).</td>
+      <td>Mondial (Ornamento Lateral e Alça Superior PC/ABS) e Moto Honda (tampas e paralamas).</td>
       <td>Auditar ponto de orvalho, temperatura e tempo de secagem dos desumidificadores. Conter Sujo de Óleo no molde. Rotina de purga para eliminar Mancha.</td>
       <td>Engenharia de Processos, Manutenção, Ferramentaria</td><td>Auditoria em 30 dias; padrão em 60</td><td class="goal">−35% a −50% em Mancha e Espirrado. Custo baixo a médio.</td></tr>
     <tr><td><strong>3 · Estabilização de janela de processo e partida de máquina</strong></td>
       <td id="td-7-3">Falha de Injeção + Regulagem representam mais de 53% de todo o refugo da filial.</td>
-      <td>Todas as famílias, começando por 110, 692, 096, 846 e 123.</td>
+      <td>Todos os clientes, começando por Moto Honda, LG, Climazon, Mondial e Daikin.</td>
       <td>Padronizar ficha técnica: comutação V/P, almofada, recalque, temperatura do molde, limpeza de saídas de gás. Revisar resfriamento e extração para Deformação.</td>
       <td>Engenharia de Processos, Ferramentaria, Líder de Produção</td><td>Diagnóstico em 30 dias; padrão em 90</td><td class="goal">−25% a −35% nas duas causas. Custo baixo (horas de engenharia e manutenção de molde).</td></tr>
     <tr><td><strong>4 · Rastreabilidade de apontamento</strong></td>
@@ -321,18 +325,86 @@ const fmt=n=>Math.round(n).toLocaleString('pt-BR');
 const pc=(n,d=2)=>Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
-const FAM_DESC = {
-  '110':'Honda: tampas, paralamas, carenagens',
-  '692':'Climatização: Decor Assembly, Chassis, Louver',
-  '096':'Climatização/Eletro: Conj. Frente Plástica, Vane, Viper',
-  '846':'Climatização: Painel Frontal, Ornamento, Alça PC/ABS',
-  '123':'Climatização: Painel Frontal da Unidade, Grade de Ar',
-  '121':'Painéis Electronic/Mechanical Front Panel',
-  '230':'Bases plásticas JOBI-M',
-  '028':'Painel Frontal G-SIDE',
-  '124':'Tampas plásticas (tampa traseira)',
-  '140':'Tomadas de ar / capas traseiras 1ST'
+const CLIENT_MAP = {
+  '000': 'OBSOLETO / SEM MOLDE',
+  '001': 'TUTIPLAST',
+  '005': 'TANARIMAN',
+  '008': 'TEC TOY',
+  '010': 'SEMP TCL',
+  '012': 'MERCO FITNESS',
+  '013': 'SAMSUNG',
+  '014': 'MERCOCOMPONENTES',
+  '015': 'H.D.L',
+  '021': 'ELGIN',
+  '024': 'GATSBY',
+  '028': 'GREE',
+  '038': 'UNIVERSAL ELECTRONICS',
+  '046': 'ALFATEC',
+  '075': 'SALCOMP',
+  '076': 'LG',
+  '086': 'FEDERAL MOGUL (TENNECO)',
+  '089': 'MUSASHI',
+  '091': 'WEG',
+  '094': 'DOWERTECH (WAISON)',
+  '096': 'CLIMAZON',
+  '097': 'INTELBRAS',
+  '098': 'VISTEON',
+  '101': 'ELECTROLUX',
+  '103': 'NIPPON SEIKI',
+  '105': 'HONDA LOCK',
+  '110': 'MOTO HONDA',
+  '113': 'SIEMENS',
+  '114': 'JOHNSON',
+  '115': 'TECHNOS DA AMAZÔNIA',
+  '117': 'SAGEMCOM BRASIL',
+  '121': 'WHIRLPOOL',
+  '122': 'GENIS',
+  '123': 'DAIKIN',
+  '124': 'ENVISION',
+  '125': 'STECK',
+  '126': 'VENTISOL',
+  '128': 'ORIENT',
+  '129': 'TECHNICOLOR',
+  '130': 'HARMAN',
+  '131': 'TRANSIRE',
+  '133': 'INVENTUS',
+  '134': 'BRUDDEN',
+  '135': 'BRUDDEN - SP',
+  '136': 'HONDA COMPONENTES',
+  '137': 'METALFINO',
+  '138': 'SAWEM',
+  '139': 'SONY BRASIL',
+  '140': 'YAMAHA MOTOR',
+  '141': 'YASUFUKU POLIMEROS',
+  '144': 'FCC',
+  '145': 'SCORPIOS',
+  '147': 'GERTEC',
+  '151': 'MERCO FITNESS DA AMAZONIA',
+  '212': 'POSITIVO',
+  '221': 'UNICOBA',
+  '229': 'PST ELETRONICA',
+  '239': 'ELGIN',
+  '250': 'MULTILASER',
+  '252': 'TRIAL',
+  '270': 'NEWLAND',
+  '274': 'LUMICENTER',
+  '276': 'SIGNIFY',
+  '312': 'VENTTOS',
+  '320': 'PRADOLUX',
+  '323': 'BAJAJ',
+  '341': 'JABIL',
+  '344': 'ELCOA',
+  '346': 'EVER ELETRIC',
+  '455': 'SECULUS',
+  '692': 'LG',
+  '846': 'MONDIAL',
+  '901': 'ASTRO TOYS'
 };
+
+function getClientName(code){
+  const c = String(code || '').padStart(3, '0');
+  return CLIENT_MAP[c] || ('CLIENTE ' + c);
+}
 
 let STATE = null;
 const charts = {};
@@ -357,18 +429,19 @@ function computeAnalytics(payload){
   const totalLiq  = prodsAll.reduce((a,p)=>a + p.qtdLiq, 0);
   const globalIdx = totalProd > 0 ? (totalRef / totalProd) * 100 : 0;
 
-  // Extrair código SAP e família (2º bloco)
+  // Extrair código SAP e Cliente (2º bloco; exceção: 692 e 076 pertencem ambos à LG)
   function parseProdMeta(fullName){
     const s = String(fullName || '').trim();
-    // Caso especial conhecido: "096011 04.096.096011.01.00"
     const mSap = /(\d{2}\.\d{3}\.\d{6}\.\d{2}[.-]\d{2})/.exec(s);
     let code = mSap ? mSap[1] : s.split(' ')[0];
-    let fam = '000';
+    let rawFam = '000';
     const parts = code.split('.');
-    if (parts.length >= 2 && /^\d{3}$/.test(parts[1])) fam = parts[1];
+    if (parts.length >= 2 && /^\d{3}$/.test(parts[1])) rawFam = parts[1];
+    const fam = (rawFam === '076') ? '692' : rawFam;
+    const client = getClientName(fam);
     let desc = s.replace(code, '').trim();
     if (!desc) desc = code;
-    return { code, fam, desc, full: s };
+    return { code, fam, rawFam, client, desc, full: s };
   }
 
   // Estatísticas descritivas helper
@@ -411,7 +484,7 @@ function computeAnalytics(payload){
   const famList = Array.from(famMap.values()).map(f => ({
     ...f,
     idx: f.prod > 0 ? (f.ref / f.prod) * 100 : 0,
-    desc: FAM_DESC[f.fam] || ('Família ' + f.fam)
+    client: getClientName(f.fam)
   })).sort((a,b) => b.ref - a.ref);
 
   // Agrupamento por Causa (REFUGO)
@@ -545,6 +618,9 @@ function computeAnalytics(payload){
   });
 
   return {
+    rawProducts: prodsAll,
+    rawItems: itemsAll,
+    parseProdMeta,
     periodoInicio: payload.periodoInicio,
     periodoFim: payload.periodoFim,
     ultimaAtualizacao: payload.ultimaAtualizacao,
@@ -574,7 +650,8 @@ function renderAll(payload){
   // Cabeçalho
   $('#hdr-text').textContent = isEmpty
     ? 'Base vazia · Nenhum dado importado na planilha'
-    : `${S.periodoInicio} a ${S.periodoFim} · ${S.activeCount} produtos ativos · ${S.famCount} famílias · ${S.causesCount} causas`;
+    : `${S.periodoInicio} a ${S.periodoFim} · ${S.activeCount} produtos ativos · ${S.famCount} clientes · ${S.causesCount} causas`;
+  $('#btn-export-xlsx').disabled = isEmpty;
 
   // Slide 1: KPIs
   $('#k-prod').textContent = (S.totalProd / 1e6).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' M';
@@ -598,12 +675,12 @@ function renderAll(payload){
     ['Produção', hProdPct, 100 - hProdPct],
     ['Refugo', hRefPct, 100 - hRefPct]
   ].map(r=>`<div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:4px"><span>${r[0]}</span><span>Honda ${pc(r[1])} · demais ${pc(r[2])}</span></div><div style="display:flex;height:22px;gap:2px"><i style="width:${r[1]}%;background:var(--accent);border-radius:2px 0 0 2px"></i><i style="flex:1;background:var(--warn);border-radius:0 2px 2px 0"></i></div></div>`).join('')
-  + `<div style="display:flex;gap:16px;font-size:12px;color:var(--ink-2)"><span><i style="display:inline-block;width:10px;height:10px;background:var(--accent);margin-right:6px"></i>Honda (110)</span><span><i style="display:inline-block;width:10px;height:10px;background:var(--warn);margin-right:6px"></i>Demais ${Math.max(0, S.famCount - 1)} famílias</span></div>`;
+  + `<div style="display:flex;gap:16px;font-size:12px;color:var(--ink-2)"><span><i style="display:inline-block;width:10px;height:10px;background:var(--accent);margin-right:6px"></i>Moto Honda</span><span><i style="display:inline-block;width:10px;height:10px;background:var(--warn);margin-right:6px"></i>Demais ${Math.max(0, S.famCount - 1)} clientes</span></div>`;
 
-  $('#lbl-honda').textContent = `Índice Honda (${S.honda.prods} produtos)`;
+  $('#lbl-honda').textContent = `Índice Moto Honda (${S.honda.prods} produtos)`;
   $('#val-honda').textContent = pc(S.honda.idx);
   $('#sub-honda').textContent = `${fmt(S.honda.ref)} pç em ${(S.honda.prod/1e6).toFixed(2).replace('.',',')} M`;
-  $('#lbl-outros').textContent = `Índice demais linhas (${S.outros.prods} produtos)`;
+  $('#lbl-outros').textContent = `Índice demais clientes (${S.outros.prods} produtos)`;
   $('#val-outros').textContent = pc(S.outros.idx);
   $('#sub-outros').textContent = `${fmt(S.outros.ref)} pç em ${(S.outros.prod/1e6).toFixed(2).replace('.',',')} M`;
 
@@ -613,7 +690,7 @@ function renderAll(payload){
     <li><strong>Assimetria forte:</strong> refugo médio por produto de ${fmt(S.stProdRef.mean)} peças contra mediana de ${fmt(S.stProdRef.med)} (${ratioProd.toFixed(1).replace('.',',')}×) e desvio-padrão de ${fmt(S.stProdRef.std)}.</li>
     <li><strong>Causas ainda mais concentradas:</strong> média de ${fmt(S.stCauRef.mean)} peças por causa e mediana de ${fmt(S.stCauRef.med)}; a maior causa (${top1Cause.name}) vale ${fmt(top1Cause.qtd)}.</li>
     <li><strong>Média simples engana:</strong> o índice médio por produto é ${pc(S.stProdIdx.mean)} (mediana ${pc(S.stProdIdx.med)}), contra ${pc(S.globalIdx)} ponderado. Lotes pequenos com taxa alta inflam a média.</li>
-    <li><strong>Famílias:</strong> mediana de ${fmt(S.stFamRef.med)} peças refugadas contra média de ${fmt(S.stFamRef.mean)}; a família ${top1Fam.fam} sozinha tem ${fmt(top1Fam.ref)}.</li>
+    <li><strong>Clientes:</strong> mediana de ${fmt(S.stFamRef.med)} peças refugadas contra média de ${fmt(S.stFamRef.mean)}; o cliente ${top1Fam.client} sozinho tem ${fmt(top1Fam.ref)}.</li>
   `;
 
   // Tabela estatísticas descritivas
@@ -622,9 +699,9 @@ function renderAll(payload){
     ['Por produto','Qtd. boa', S.stProdLiq, false],
     ['Por produto','Qtd. refugada', S.stProdRef, false],
     ['Por produto','Índice de refugo', S.stProdIdx, true],
-    ['Por família','Qtd. produzida', S.stFamProd, false],
-    ['Por família','Qtd. refugada', S.stFamRef, false],
-    ['Por família','Índice de refugo', S.stFamIdx, true],
+    ['Por cliente','Qtd. produzida', S.stFamProd, false],
+    ['Por cliente','Qtd. refugada', S.stFamRef, false],
+    ['Por cliente','Índice de refugo', S.stFamIdx, true],
     ['Por causa','Qtd. refugada', S.stCauRef, false],
     ['Por causa','Participação (%)', S.stCauPct, true]
   ];
@@ -667,11 +744,11 @@ function renderAll(payload){
       : `Destaque Pareto: ${titleC2} em 2º lugar`;
     const cfMap = S.causeFamMap.get(c2Obj.name);
     const topFamsC2 = cfMap
-      ? Array.from(cfMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([f,q])=>`${f} (${fmt(q)} pç)`).join(', ')
+      ? Array.from(cfMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([f,q])=>`${getClientName(f)} (${fmt(q)} pç)`).join(', ')
       : '';
     const cmpC3 = c3Obj ? ` e supera ${c3Obj.name} (${pc((c3Obj.qtd/S.totalCauseRef)*100)})` : '';
-    const hondaIntro = hRank ? `Na Honda (família 110) ocupava a ${hRank}ª posição. ` : '';
-    const famTrail = topFamsC2 ? ` Principais famílias: ${topFamsC2}.` : '';
+    const hondaIntro = hRank ? `Na Moto Honda ocupava a ${hRank}ª posição. ` : '';
+    const famTrail = topFamsC2 ? ` Principais clientes: ${topFamsC2}.` : '';
     $('#p-contam').innerHTML = `${hondaIntro}Na filial soma <strong style="color:var(--ink)">${fmt(c2Obj.qtd)} pç (${pc((c2Obj.qtd/S.totalCauseRef)*100)})</strong>${cmpC3}.${famTrail}`;
   }
 
@@ -697,8 +774,8 @@ function renderAll(payload){
   }
   $('#note-s3').textContent = `Vermelho = produto presente nos dois rankings. Média global da filial: ${pc(S.globalIdx)}.`;
 
-  $('#t-vol').innerHTML = '<tr><th>#</th><th class="l">Código SAP - Produto</th><th>Fam.</th><th>Refugo</th><th>Índice</th></tr>' +
-    S.top10Vol.map((p,i)=>`<tr class="${p.inBoth?'out':''}"><td>${i+1}</td><td class="l">${p.code} - ${p.desc}</td><td>${p.fam}</td><td>${fmt(p.qtdRef)}</td><td>${pc(p.idx)}</td></tr>`).join('');
+  $('#t-vol').innerHTML = '<tr><th>#</th><th class="l">Código SAP - Produto</th><th>Cliente</th><th>Refugo</th><th>Índice</th></tr>' +
+    S.top10Vol.map((p,i)=>`<tr class="${p.inBoth?'out':''}"><td>${i+1}</td><td class="l">${p.code} - ${p.desc}</td><td>${p.client}</td><td>${fmt(p.qtdRef)}</td><td>${pc(p.idx)}</td></tr>`).join('');
 
   $('#t-idx').innerHTML = '<tr><th>#</th><th class="l">Código SAP - Produto</th><th>Produzida</th><th>Refugo</th><th>Índice</th><th class="l">1ª causa</th></tr>' +
     S.top10Idx.map((p,i)=>`<tr class="${p.inBoth?'out':''}"><td>${i+1}</td><td class="l">${p.code} - ${p.desc}</td><td>${fmt(p.qtdProd)}</td><td>${fmt(p.qtdRef)}</td><td>${pc(p.idx)}</td><td class="l">${p.top1Str}</td></tr>`).join('');
@@ -724,7 +801,7 @@ function renderAll(payload){
       if (!c) return '<td class="l">—</td>';
       return `<td class="l" style="box-shadow:inset 3px 0 0 var(${cc(c[0])})"><span style="color:var(--ink)">${c[0]}</span><br><span style="color:var(--ink-2)">${c[1]}</span></td>`;
     }).join('');
-    t5 += `<tr data-r="${i}" style="cursor:pointer"><td class="l">${item.prod.code} - ${item.prod.desc}</td><td>${item.prod.fam}</td><td class="l"><span class="pill" style="${pmStyle[item.perfil][1]}">${pmStyle[item.perfil][0]}</span></td>${cells5}</tr>
+    t5 += `<tr data-r="${i}" style="cursor:pointer"><td class="l">${item.prod.code} - ${item.prod.desc}</td><td>${item.prod.client}</td><td class="l"><span class="pill" style="${pmStyle[item.perfil][1]}">${pmStyle[item.perfil][0]}</span></td>${cells5}</tr>
            <tr hidden id="d${i}"><td class="l" colspan="8" style="white-space:normal;background:var(--surface-2);color:var(--ink-2)"><strong style="color:var(--ink)">Demais causas · </strong>${item.restStr}</td></tr>`;
   });
   $('#t-top5').innerHTML = t5;
@@ -823,10 +900,10 @@ function renderAll(payload){
   const top5FamSum = S.famList.slice(0, 5).reduce((a,f)=>a+f.ref, 0);
   const maxIdxFam = [...S.famList].sort((a,b)=>b.idx - a.idx)[0];
   $('#h6').textContent = isEmpty
-    ? 'Nenhuma família registrada na base atual'
-    : `Cinco famílias concentram ${pc(S.totalRef > 0 ? (top5FamSum/S.totalRef)*100 : 0,1)} do refugo; a ${maxIdxFam?.fam || ''} tem o maior índice, ${pc(maxIdxFam?.idx || 0)}`;
-  $('#t-fam').innerHTML = '<tr><th>#</th><th>Família</th><th class="l">Linha</th><th>Produtos</th><th>Produzida</th><th>Refugada</th><th>Índice</th><th>% refugo</th><th class="l">3 principais causas</th></tr>' +
-    top10Fam.map((f,i)=>`<tr class="${f.idx > S.globalIdx*2 ? 'out' : ''}"><td>${i+1}</td><td>${f.fam}</td><td class="l">${f.desc}</td><td>${f.prods}</td><td>${fmt(f.prod)}</td><td>${fmt(f.ref)}</td><td style="color:${f.idx > S.globalIdx*2 ? 'var(--crit)' : f.idx > S.globalIdx ? 'var(--warn)' : 'inherit'};font-weight:600">${pc(f.idx)}</td><td>${pc(S.totalRef > 0 ? (f.ref/S.totalRef)*100 : 0)}</td><td class="l">${f.topCausesStr}</td></tr>`).join('');
+    ? 'Nenhum cliente registrado na base atual'
+    : `Cinco clientes concentram ${pc(S.totalRef > 0 ? (top5FamSum/S.totalRef)*100 : 0,1)} do refugo; ${maxIdxFam?.client || ''} tem o maior índice, ${pc(maxIdxFam?.idx || 0)}`;
+  $('#t-fam').innerHTML = '<tr><th>#</th><th class="l">Cliente</th><th>Produtos</th><th>Produzida</th><th>Refugada</th><th>Índice</th><th>% refugo</th><th class="l">3 principais causas</th></tr>' +
+    top10Fam.map((f,i)=>`<tr class="${f.idx > S.globalIdx*2 ? 'out' : ''}"><td>${i+1}</td><td class="l"><strong>${f.client}</strong></td><td>${f.prods}</td><td>${fmt(f.prod)}</td><td>${fmt(f.ref)}</td><td style="color:${f.idx > S.globalIdx*2 ? 'var(--crit)' : f.idx > S.globalIdx ? 'var(--warn)' : 'inherit'};font-weight:600">${pc(f.idx)}</td><td>${pc(S.totalRef > 0 ? (f.ref/S.totalRef)*100 : 0)}</td><td class="l">${f.topCausesStr}</td></tr>`).join('');
 
   // Slide 8 buttons labels
   const s5 = S.causesList.slice(0,5).reduce((a,c)=>a+c.qtd,0);
@@ -943,15 +1020,15 @@ const mk = {
     const top10Fam = S.famList.slice(0, 10);
     return new Chart($('#c-fam'),{
       data:{
-        labels: top10Fam.map(f=>f.fam),
+        labels: top10Fam.map(f=>f.client),
         datasets:[
           {type:'bar',label:'Peças refugadas',data:top10Fam.map(f=>f.ref),yAxisID:'y',borderRadius:{topLeft:3,topRight:3},maxBarThickness:44,backgroundColor:top10Fam.map((f,i)=>i<5?css('--accent'):css('--bar-muted'))},
-          {type:'line',label:'Índice da família (%)',data:top10Fam.map(f=>f.idx),yAxisID:'y1',borderColor:css('--warn'),backgroundColor:top10Fam.map(f=>f.idx>5?css('--crit'):css('--warn')),borderWidth:2,pointRadius:top10Fam.map(f=>f.idx>5?7:4),tension:0},
+          {type:'line',label:'Índice do cliente (%)',data:top10Fam.map(f=>f.idx),yAxisID:'y1',borderColor:css('--warn'),backgroundColor:top10Fam.map(f=>f.idx>5?css('--crit'):css('--warn')),borderWidth:2,pointRadius:top10Fam.map(f=>f.idx>5?7:4),tension:0},
           {type:'line',label:`Média da filial ${pc(S.globalIdx)}`,data:top10Fam.map(()=>S.globalIdx),yAxisID:'y1',borderColor:css('--ink-2'),borderDash:[6,5],borderWidth:1.5,pointRadius:0}
         ]
       },
-      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:lg,tooltip:{...tt,callbacks:{title:i=>'Família '+top10Fam[i[0].dataIndex].fam+' · '+top10Fam[i[0].dataIndex].desc,label:c=>c.dataset.yAxisID==='y1'?`${c.dataset.label}: ${pc(c.raw)}`:`${c.dataset.label}: ${fmt(c.raw)} pç`}}},
-        scales:{x:{grid:{display:false},title:{display:true,text:'Família (2º bloco do código)'}},y:{grid,title:{display:true,text:'Peças refugadas'},ticks:{callback:v=>Math.round(v/1000)+' mil'}},y1:{position:'right',min:0,grid:{display:false},title:{display:true,text:'Índice (%)'},ticks:{callback:v=>v+'%'}}}}
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:lg,tooltip:{...tt,callbacks:{title:i=>'Cliente: '+top10Fam[i[0].dataIndex].client,label:c=>c.dataset.yAxisID==='y1'?`${c.dataset.label}: ${pc(c.raw)}`:`${c.dataset.label}: ${fmt(c.raw)} pç`}}},
+        scales:{x:{grid:{display:false},title:{display:true,text:'Cliente'}},y:{grid,title:{display:true,text:'Peças refugadas'},ticks:{callback:v=>Math.round(v/1000)+' mil'}},y1:{position:'right',min:0,grid:{display:false},title:{display:true,text:'Índice (%)'},ticks:{callback:v=>v+'%'}}}}
     });
   },
   gain(){
@@ -1253,9 +1330,107 @@ $('#btn-submit-import').onclick = async () => {
 };
 
 /* ============================================================================
+   EXPORTAÇÃO DO RELATÓRIO CONSOLIDADO PARA EXCEL (.xlsx) VIA SHEETJS
+   ============================================================================ */
+function exportReportXlsx(){
+  if (!STATE || !STATE.rawProducts || STATE.rawProducts.length === 0) return;
+  const S = STATE;
+  const wb = XLSX.utils.book_new();
+  const periodoStr = `${S.periodoInicio} a ${S.periodoFim}`;
+
+  // Aba 1: Resumo por Produto
+  const aoaProd = [
+    ["TUTIPLAST INDÚSTRIA E COMÉRCIO LTDA — RELATÓRIO CONSOLIDADO DE REFUGO (R086)"],
+    [`Período acumulado: ${periodoStr} | Gerado pelo Painel Web`],
+    [],
+    ["PRODUTO", "CLIENTE", "QTD. PRODUZIDA (A)", "QTD. REFUGADA (B)", "QTD. LÍQUIDA", "% DE REFUGO (B/A)"]
+  ];
+  const prodTotalsMap = new Map();
+  S.rawProducts.forEach(p => {
+    const meta = S.parseProdMeta(p.produto);
+    const qP = Number(p.qtdProd) || 0;
+    const qR = Number(p.qtdRef) || 0;
+    const qL = Number(p.qtdLiq) || (qP - qR);
+    const pct = qP > 0 ? Number(((qR / qP) * 100).toFixed(2)) : 0;
+    prodTotalsMap.set(String(p.produto).trim(), qP);
+    aoaProd.push([p.produto, meta.client, qP, qR, qL, pct]);
+  });
+  aoaProd.push([
+    "TOTAL GERAL",
+    "—",
+    S.totalProd,
+    S.totalRef,
+    S.totalLiq,
+    S.totalProd > 0 ? Number(((S.totalRef / S.totalProd) * 100).toFixed(2)) : 0
+  ]);
+  const wsProd = XLSX.utils.aoa_to_sheet(aoaProd);
+  wsProd["!cols"] = [{wch:56},{wch:26},{wch:20},{wch:20},{wch:18},{wch:18}];
+  XLSX.utils.book_append_sheet(wb, wsProd, "Resumo por Produto");
+
+  // Aba 2: Base para Filtros (100% tabular)
+  const aoaBase = [
+    ["BASE DETALHADA POR PRODUTO E CAUSA — PRONTA PARA FILTROS E TABELA DINÂMICA"],
+    [`Período acumulado: ${periodoStr}`],
+    [],
+    ["PRODUTO", "CLIENTE", "REFUGO", "CAUSA", "QTD. REFUGADA (C)", "% DE REFUGO (C/A)"]
+  ];
+  S.rawItems.forEach(it => {
+    const pName = String(it.produto || "").trim();
+    const meta = S.parseProdMeta(pName);
+    const qC = Number(it.qtdRef) || 0;
+    const qP = prodTotalsMap.get(pName) || 0;
+    const pctC = qP > 0 ? Number(((qC / qP) * 100).toFixed(2)) : 0;
+    aoaBase.push([pName, meta.client, it.refugo, it.causa, qC, pctC]);
+  });
+  const wsBase = XLSX.utils.aoa_to_sheet(aoaBase);
+  wsBase["!cols"] = [{wch:56},{wch:26},{wch:42},{wch:28},{wch:20},{wch:18}];
+  XLSX.utils.book_append_sheet(wb, wsBase, "Base para Filtros");
+
+  // Aba 3: Pareto de Causas
+  const aoaPareto = [
+    ["PARETO DAS CAUSAS DE REFUGO"],
+    [`Período acumulado: ${periodoStr}`],
+    [],
+    ["RANKING", "CÓDIGO", "CAUSA DE REFUGO", "QTD. REFUGADA", "% DO TOTAL", "% ACUMULADO", "QTD. PRODUTOS AFETADOS"]
+  ];
+  let cum = 0;
+  S.causesList.forEach((c, idx) => {
+    cum += c.qtd;
+    const pct = S.totalCauseRef > 0 ? Number(((c.qtd / S.totalCauseRef) * 100).toFixed(2)) : 0;
+    const pctCum = S.totalCauseRef > 0 ? Number(((cum / S.totalCauseRef) * 100).toFixed(2)) : 0;
+    aoaPareto.push([idx + 1, c.code, c.name, c.qtd, pct, pctCum, c.prodsCount]);
+  });
+  const wsPareto = XLSX.utils.aoa_to_sheet(aoaPareto);
+  wsPareto["!cols"] = [{wch:10},{wch:12},{wch:38},{wch:18},{wch:14},{wch:15},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, wsPareto, "Pareto de Causas");
+
+  // Aba 4: Desempenho por Cliente
+  const aoaCli = [
+    ["DESEMPENHO CONSOLIDADO POR CLIENTE"],
+    [`Período acumulado: ${periodoStr}`],
+    [],
+    ["RANKING", "CLIENTE", "PRODUTOS ATIVOS", "QTD. PRODUZIDA", "QTD. REFUGADA", "ÍNDICE DE REFUGO (%)", "% DO REFUGO TOTAL", "3 PRINCIPAIS CAUSAS"]
+  ];
+  S.famList.forEach((f, idx) => {
+    const pctTot = S.totalRef > 0 ? Number(((f.ref / S.totalRef) * 100).toFixed(2)) : 0;
+    aoaCli.push([idx + 1, f.client, f.prods, f.prod, f.ref, Number(f.idx.toFixed(2)), pctTot, f.topCausesStr]);
+  });
+  const wsCli = XLSX.utils.aoa_to_sheet(aoaCli);
+  wsCli["!cols"] = [{wch:10},{wch:28},{wch:18},{wch:18},{wch:18},{wch:20},{wch:18},{wch:54}];
+  XLSX.utils.book_append_sheet(wb, wsCli, "Desempenho por Cliente");
+
+  const safeIni = String(S.periodoInicio || "").replace(/\//g, ".");
+  const safeFim = String(S.periodoFim || "").replace(/\//g, ".");
+  const fileName = `REFUGO_FILIAL_CONSOLIDADO_${safeIni}_ATE_${safeFim}.xlsx`;
+  XLSX.writeFile(wb, fileName);
+}
+
+$('#btn-export-xlsx').onclick = exportReportXlsx;
+
+/* ============================================================================
    NAVEGAÇÃO E INICIALIZAÇÃO
    ============================================================================ */
-const titles = ['Sumário','Pareto de causas','Produtos críticos','Produto × causa','Perfis de falha','Famílias','Plano 5W2H','Ganho esperado'];
+const titles = ['Sumário','Pareto de causas','Produtos críticos','Produto × causa','Perfis de falha','Clientes','Plano 5W2H','Ganho esperado'];
 const N = titles.length, nav = $('#nav');
 titles.forEach((t,i)=>{
   const b = document.createElement('button');
