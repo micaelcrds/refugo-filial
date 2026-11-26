@@ -15,7 +15,7 @@
   --alert-bg:#1d1810; --alert-border:#6b4a1c;
   --violet-bg:#16142a; --violet-border:#4b3d7a; --violet-pill-bg:#2a2350;
   --out-bg:#2a1716;
-  --pill-c-bg:#3a1a18; --pill-w-bg:#3a2d12; --pill-a-bg:#10393a;
+  --pill-c-bg:#3a1a18; --pill-w-bg:#3a2d12; --pill-a-bg:#10393a; --pill-b-bg:#172a4a;
   --msg-err-bg:#321716; --msg-err-bd:#6e2b27; --msg-err-ink:#ffb4ad;
   --msg-ok-bg:#103334; --msg-ok-bd:#1e6365; --msg-ok-ink:#9cf2ef;
   --msg-info-bg:#1a2536; --msg-info-bd:#2e4361;
@@ -33,7 +33,7 @@
   --alert-bg:#fffbeb; --alert-border:#f59e0b;
   --violet-bg:#f5f3ff; --violet-border:#c4b5fd; --violet-pill-bg:#ede9fe;
   --out-bg:#fef2f2;
-  --pill-c-bg:#fee2e2; --pill-w-bg:#fef3c7; --pill-a-bg:#ccfbf1;
+  --pill-c-bg:#fee2e2; --pill-w-bg:#fef3c7; --pill-a-bg:#ccfbf1; --pill-b-bg:#dbeafe;
   --msg-err-bg:#fef2f2; --msg-err-bd:#fca5a5; --msg-err-ink:#991b1b;
   --msg-ok-bg:#f0fdfa; --msg-ok-bd:#5eead4; --msg-ok-ink:#115e59;
   --msg-info-bg:#eff6ff; --msg-info-bd:#93c5fd;
@@ -48,11 +48,17 @@ body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--
   transition:background-color .2s,color .2s}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
 .wrap{max-width:1240px;margin:0 auto}
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);padding:14px 0 0;border-bottom:1px solid var(--line)}
-.brand{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;margin-bottom:10px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);padding:12px 0 0;border-bottom:1px solid var(--line)}
+.brand{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;margin-bottom:8px}
 .brand h1{font:600 15px var(--font-display);letter-spacing:.02em;margin:0}
 .brand-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .brand span{color:var(--muted);font-size:12px}
+.filter-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:7px 10px;margin-bottom:8px;background:var(--surface);border:1px solid var(--line);border-radius:5px;font-size:12px}
+.filter-group{display:inline-flex;align-items:center;gap:6px}
+.filter-group label{color:var(--muted);font-weight:500;white-space:nowrap}
+.filter-select{background:var(--surface-2);border:1px solid var(--line);color:var(--ink);border-radius:4px;padding:4px 8px;font:500 12px var(--font-body);cursor:pointer;max-width:230px}
+.filter-select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.filter-badge{margin-left:auto;color:var(--accent);font-size:11px;font-weight:500}
 .btn-import,.btn-export,.btn-theme{background:var(--surface-2);border:1px solid var(--accent-dim);color:var(--accent);border-radius:4px;padding:5px 11px;font:500 12px var(--font-body);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s,color .15s}
 .btn-import:hover,.btn-export:hover,.btn-theme:hover{background:var(--accent-hover);border-color:var(--accent)}
 .btn-export,.btn-theme{border-color:var(--line);color:var(--ink)}
@@ -67,7 +73,7 @@ nav button b{font-family:var(--font-display);color:var(--muted);margin-right:6px
 nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--accent)}
 nav button[aria-selected=true] b{color:var(--accent)}
 button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-main{padding-block:24px 8px}
+main{padding-block:22px 8px}
 .slide{display:none}.slide.on{display:block}
 .eyebrow{font:600 11px var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
 h2{font:700 clamp(22px,3.2vw,32px)/1.15 var(--font-display);margin:0 0 20px;max-width:30ch;text-wrap:balance;letter-spacing:-.01em}
@@ -97,6 +103,7 @@ ul.ex strong{color:var(--ink);font-weight:600}
 .chart{position:relative;height:380px}
 .chart.tall{height:460px}
 .chart.xl{height:620px}
+.chart.sm{height:280px}
 .tablewrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
 th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -106,7 +113,7 @@ tr.out td{background:var(--out-bg)}
 tr.out td:first-child{box-shadow:inset 3px 0 0 var(--crit)}
 tr.hl td{background:var(--surface-2)}
 .pill{display:inline-block;padding:1px 8px;border-radius:3px;font-size:11px;font-weight:600;letter-spacing:.03em}
-.pill.c{background:var(--pill-c-bg);color:var(--crit)} .pill.w{background:var(--pill-w-bg);color:var(--warn)} .pill.a{background:var(--pill-a-bg);color:var(--accent)}
+.pill.c{background:var(--pill-c-bg);color:var(--crit)} .pill.w{background:var(--pill-w-bg);color:var(--warn)} .pill.a{background:var(--pill-a-bg);color:var(--accent)} .pill.b{background:var(--pill-b-bg);color:var(--blue)}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-bottom:12px}
 .seg button{background:var(--surface);border:0;color:var(--ink-2);padding:6px 14px;font:500 12px var(--font-body);cursor:pointer}
 .seg button[aria-pressed=true]{background:var(--accent-dim);color:var(--ink);font-weight:600}
@@ -115,8 +122,8 @@ tr.hl td{background:var(--surface-2)}
 .heat tr.stat td{color:var(--ink-2);background:var(--surface)}
 .heat tr.stat td:first-child{color:var(--ink)}
 .note{color:var(--muted);font-size:12px;margin-top:12px}
-.fw5 th,.fw5 td{white-space:normal;text-align:left;vertical-align:top;min-width:150px;line-height:1.45}
-.fw5 td:first-child{min-width:190px}
+.fw5 th,.fw5 td{white-space:normal;text-align:left;vertical-align:top;min-width:140px;line-height:1.45}
+.fw5 td:first-child{min-width:185px}
 .fw5 td strong{display:block;font:600 13px var(--font-display);margin-bottom:4px}
 .fw5 td.goal{color:var(--accent);font-weight:500}
 footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 0 max(28px,env(safe-area-inset-bottom,0px))}
@@ -127,7 +134,7 @@ footer span{color:var(--muted);font-size:12px}
 /* Modal de Importação */
 .modal-backdrop{position:fixed;inset:0;background:var(--backdrop);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-backdrop.open{display:flex}
-.modal{background:var(--surface);border:1px solid var(--line);border-radius:8px;max-width:560px;width:100%;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.modal{background:var(--surface);border:1px solid var(--line);border-radius:8px;max-width:580px;width:100%;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
 .modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:10px}
 .modal-hdr h3{margin:0;font-size:17px}
 .modal-close{background:none;border:0;color:var(--ink-2);font-size:20px;cursor:pointer;padding:2px 6px}
@@ -141,8 +148,11 @@ footer span{color:var(--muted);font-size:12px}
 .msg-box.err{display:block;background:var(--msg-err-bg);border:1px solid var(--msg-err-bd);color:var(--msg-err-ink)}
 .msg-box.ok{display:block;background:var(--msg-ok-bg);border:1px solid var(--msg-ok-bd);color:var(--msg-ok-ink)}
 .msg-box.info{display:block;background:var(--msg-info-bg);border:1px solid var(--msg-info-bd);color:var(--ink-2)}
-.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+.modal-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.modal-actions-right{display:flex;gap:10px;margin-left:auto}
 .btn-sec{background:var(--surface-2);border:1px solid var(--line);color:var(--ink);border-radius:4px;padding:8px 14px;font:500 13px var(--font-body);cursor:pointer}
+.btn-undo{background:var(--pill-c-bg);border:1px solid var(--crit);color:var(--crit);border-radius:4px;padding:8px 12px;font:500 12px var(--font-body);cursor:pointer}
+.btn-undo:disabled{opacity:.4;cursor:not-allowed}
 .btn-pri{background:var(--accent);border:0;color:var(--accent-ink);border-radius:4px;padding:8px 16px;font:600 13px var(--font-body);cursor:pointer}
 .btn-pri:disabled{opacity:.45;cursor:not-allowed}
 </style>
@@ -154,12 +164,28 @@ footer span{color:var(--muted);font-size:12px}
   <div class="brand">
     <h1>Refugo Filial · Tutiplast · Injeção Termoplástica</h1>
     <div class="brand-right">
-      <span id="hdr-meta"><i class="status-dot" id="sync-dot"></i> <span id="hdr-text">01/01/2026 a 11/11/2026 · 679 produtos ativos · clientes · 31 causas</span></span>
+      <span id="hdr-meta"><i class="status-dot" id="sync-dot"></i> <span id="hdr-text">Aguardando sincronização...</span></span>
       <button class="btn-theme" id="btn-theme" title="Alternar entre modo claro e escuro">☀ Modo Claro</button>
       <button class="btn-export" id="btn-export-xlsx" title="Exportar base consolidada atual para Excel (.xlsx)" disabled>↓ Baixar Planilha</button>
       <button class="btn-export" id="btn-export-html" title="Baixar cópia offline da apresentação (.html) com os dados atuais" disabled>↓ Baixar Relatório</button>
       <button class="btn-import" id="btn-open-import" title="Importar relatório R086 (.xls ou .xlsx) do INJET">↑ Atualizar Base (INJET)</button>
     </div>
+  </div>
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label for="sel-client">Cliente:</label>
+      <select id="sel-client" class="filter-select">
+        <option value="ALL">Todos os Clientes</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="sel-window">Recorte:</label>
+      <select id="sel-window" class="filter-select">
+        <option value="CUMULATIVE">Acumulado Consolidado</option>
+        <option value="LATEST" disabled>Último Período Importado (aguardando novo envio)</option>
+      </select>
+    </div>
+    <span class="filter-badge" id="filter-status">Escopo: Filial Completa · Acumulado</span>
   </div>
   <nav id="nav" role="tablist" aria-label="Slides"></nav>
 </header>
@@ -167,23 +193,31 @@ footer span{color:var(--muted);font-size:12px}
 <main>
 <!-- SLIDE 1 -->
 <section class="slide" id="s1">
-  <p class="eyebrow">Sumário executivo · Base Consolidada INJET (R086)</p>
-  <h2 id="h1">A filial refuga 1,23%, mas a média por produto é quase 4 vezes a mediana: poucos moldes concentram a perda</h2>
+  <p class="eyebrow" id="eyebrow-s1">Sumário executivo · Base Consolidada INJET (R086)</p>
+  <h2 id="h1">Carregando diagnóstico...</h2>
   <div class="grid g4" style="margin-bottom:16px">
-    <div class="panel kpi"><div class="lbl">Produção bruta</div><div class="val" id="k-prod">47,27 M</div><div class="sub" id="k-prod-sub">47.273.712 peças · 679 produtos ativos</div></div>
-    <div class="panel kpi"><div class="lbl">Produção boa</div><div class="val" id="k-liq">46,69 M</div><div class="sub" id="k-liq-sub">46.690.375 peças · 98,77%</div></div>
-    <div class="panel kpi hot"><div class="lbl">Refugo total</div><div class="val" id="k-ref">583.337</div><div class="sub">peças refugadas</div></div>
-    <div class="panel kpi hot"><div class="lbl">Índice global</div><div class="val" id="k-idx">1,23%</div><div class="sub" id="k-idx-sub">Período: 01/01/2026 a 11/11/2026</div></div>
+    <div class="panel kpi"><div class="lbl">Produção bruta</div><div class="val" id="k-prod">0,00 M</div><div class="sub" id="k-prod-sub">0 peças · 0 produtos ativos</div></div>
+    <div class="panel kpi"><div class="lbl">Produção boa</div><div class="val" id="k-liq">0,00 M</div><div class="sub" id="k-liq-sub">0 peças · 0,00%</div></div>
+    <div class="panel kpi hot"><div class="lbl">Refugo total</div><div class="val" id="k-ref">0</div><div class="sub">peças refugadas</div></div>
+    <div class="panel kpi hot"><div class="lbl">Índice global</div><div class="val" id="k-idx">0,00%</div><div class="sub" id="k-idx-sub">Período: —</div></div>
   </div>
   <div class="split" style="margin-bottom:16px">
-    <div class="panel"><h3>Moto Honda contra os demais clientes</h3>
+    <div class="panel"><h3 id="h-cmp">Moto Honda contra os demais clientes</h3>
       <div id="cmp" style="display:grid;gap:14px;margin-top:12px"></div>
       <div class="grid g2" style="margin-top:16px">
-        <div><div class="lbl" style="color:var(--ink-2);font-size:12px" id="lbl-honda">Índice Honda (252 produtos)</div><div class="val" style="font:700 28px var(--font-display)" id="val-honda">1,16%</div><div class="sub" style="color:var(--muted);font-size:12px" id="sub-honda">227.512 pç em 19,59 M</div></div>
-        <div><div class="lbl" style="color:var(--ink-2);font-size:12px" id="lbl-outros">Índice demais linhas (427 produtos)</div><div class="val warn-t" style="font:700 28px var(--font-display)" id="val-outros">1,29%</div><div class="sub" style="color:var(--muted);font-size:12px" id="sub-outros">355.825 pç em 27,68 M</div></div>
+        <div><div class="lbl" style="color:var(--ink-2);font-size:12px" id="lbl-honda">Índice Moto Honda (0 produtos)</div><div class="val" style="font:700 28px var(--font-display)" id="val-honda">0,00%</div><div class="sub" style="color:var(--muted);font-size:12px" id="sub-honda">0 pç em 0,00 M</div></div>
+        <div><div class="lbl" style="color:var(--ink-2);font-size:12px" id="lbl-outros">Índice demais clientes (0 produtos)</div><div class="val warn-t" style="font:700 28px var(--font-display)" id="val-outros">0,00%</div><div class="sub" style="color:var(--muted);font-size:12px" id="sub-outros">0 pç em 0,00 M</div></div>
       </div></div>
     <div class="panel"><h3>Diagnóstico estatístico</h3>
       <ul class="ex" id="ul-diag"></ul></div>
+  </div>
+  <div class="panel" id="panel-timeline" style="margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+      <h3 style="margin:0">Evolução Temporal por Período Importado</h3>
+      <span class="pill a" id="pill-timeline">1 período registrado</span>
+    </div>
+    <div class="chart sm"><canvas id="c-timeline"></canvas></div>
+    <p class="note">Acompanhamento de cada janela importada do INJET (R086) ao longo do ano.</p>
   </div>
   <div class="panel"><h3>Estatísticas descritivas das três dimensões</h3>
     <div class="tablewrap"><table id="t-stats"></table></div>
@@ -193,14 +227,14 @@ footer span{color:var(--muted);font-size:12px}
 <!-- SLIDE 2 -->
 <section class="slide" id="s2">
   <p class="eyebrow">Pareto das causas · Análise Causas</p>
-  <h2 id="h2">Cinco causas respondem por 81% do refugo, e Contaminação salta para o 2º lugar</h2>
+  <h2 id="h2">Pareto das causas de refugo</h2>
   <div class="split">
     <div class="panel"><div class="chart tall"><canvas id="c-pareto"></canvas></div>
       <p class="note">Mostradas as 12 maiores causas. Cores: ciano = 5 causas do corte de 80%, violeta = Contaminação (achado estratégico), âmbar = Refugo Não Digitado.</p></div>
     <div style="display:grid;gap:16px">
-      <div class="panel"><h3 id="h-par5">Classe A do Pareto · 472.243 pç (80,99%)</h3>
+      <div class="panel"><h3 id="h-par5">Classe A do Pareto</h3>
         <div class="tablewrap"><table id="t-par5"></table></div></div>
-      <div class="panel violet-card"><h3 style="color:var(--violet)" id="h-contam">Achado: Contaminação 7ª → 2ª</h3>
+      <div class="panel violet-card"><h3 style="color:var(--violet)" id="h-contam">Destaque Pareto</h3>
         <p style="margin:0;color:var(--ink-2)" id="p-contam"></p></div>
       <div class="panel alert"><h3 id="h-naodig">Alerta: “Refugo Não Digitado”</h3>
         <p style="margin:0;color:var(--ink-2)" id="p-naodig"></p></div>
@@ -211,12 +245,12 @@ footer span{color:var(--muted);font-size:12px}
 <!-- SLIDE 3 -->
 <section class="slide" id="s3">
   <p class="eyebrow">Produtos críticos · Volume e Índice (lotes &gt; 50 mil pç)</p>
-  <h2 id="h3">Três produtos estão nos dois rankings: perdem muitas peças e com taxa crítica</h2>
+  <h2 id="h3">Produtos críticos por volume e índice</h2>
   <div class="grid g2" style="margin-bottom:16px">
-    <div class="panel"><h3>Top 10 em volume de refugo <span class="pill a" id="pill-vol">88.491 pç · 15,17%</span></h3><div class="chart xl"><canvas id="c-vol"></canvas></div></div>
-    <div class="panel"><h3>Top 10 em índice (lotes &gt; 50 mil pç) <span class="pill w" id="pill-idx">5,30% a 9,75%</span></h3><div class="chart xl"><canvas id="c-idx"></canvas></div></div>
+    <div class="panel"><h3>Top 10 em volume de refugo <span class="pill a" id="pill-vol">0 pç</span></h3><div class="chart xl"><canvas id="c-vol"></canvas></div></div>
+    <div class="panel"><h3>Top 10 em índice (lotes &gt; 50 mil pç) <span class="pill w" id="pill-idx">0,00%</span></h3><div class="chart xl"><canvas id="c-idx"></canvas></div></div>
   </div>
-  <p class="note" style="margin:-4px 0 16px" id="note-s3">Vermelho = produto presente nos dois rankings. Média global da filial: 1,23%.</p>
+  <p class="note" style="margin:-4px 0 16px" id="note-s3">Vermelho = produto presente nos dois rankings.</p>
   <div class="grid g3" style="margin-bottom:16px" id="cards-intersec"></div>
   <div class="grid g2" style="margin-top:16px">
     <div class="panel"><div class="tablewrap"><table id="t-vol"></table></div></div>
@@ -230,14 +264,14 @@ footer span{color:var(--muted);font-size:12px}
   <h2>Distribuição das principais causas nos 10 produtos de maior volume de refugo</h2>
   <div class="seg" role="group" aria-label="Visualização"><button id="v-heat" aria-pressed="true">Mapa de calor</button><button id="v-bars" aria-pressed="false">Barras 100%</button></div>
   <div class="panel" id="p-heat"><div class="tablewrap"><table class="heat" id="t-heat"></table></div>
-    <p class="note">Cada célula mostra o % do refugo do próprio produto e a quantidade. “Não Dig.” = Refugo Não Digitado. Estatísticas sobre as quantidades dos 10 produtos (desvio-padrão amostral).</p></div>
+    <p class="note">Cada célula mostra o % do refugo do próprio produto e a quantidade. “Não Dig.” = Refugo Não Digitado.</p></div>
   <div class="panel" id="p-bars" hidden><div class="chart tall"><canvas id="c-stack"></canvas></div></div>
 </section>
 
 <!-- SLIDE 5 -->
 <section class="slide" id="s5">
   <p class="eyebrow">Top 5 causas por produto · Detalhamento</p>
-  <h2 id="h5">Os 10 produtos líderes seguem três perfis de falha, cada um com ação própria</h2>
+  <h2 id="h5">Os 10 produtos líderes seguem perfis de falha com ações específicas</h2>
   <div class="grid g3" style="margin-bottom:16px" id="cards-perfis"></div>
   <div class="panel"><h3>Top 5 causas por produto</h3>
     <div class="tablewrap"><table id="t-top5"></table></div>
@@ -247,47 +281,25 @@ footer span{color:var(--muted);font-size:12px}
 <!-- SLIDE 6 -->
 <section class="slide" id="s6">
   <p class="eyebrow">Desempenho por cliente · Agrupamento SAP</p>
-  <h2 id="h6">Cinco clientes concentram mais de 82% do refugo; Gree tem o maior índice</h2>
+  <h2 id="h6">Desempenho consolidado por cliente</h2>
   <div class="panel" style="margin-bottom:16px"><div class="chart tall"><canvas id="c-fam"></canvas></div></div>
   <div class="panel"><div class="tablewrap"><table id="t-fam"></table></div>
-    <p class="note">Clientes identificados automaticamente pelo 2º bloco do código SAP (código 692 unificado em LG). Índice em vermelho: acima de 2× a média da filial. Âmbar: acima da média.</p></div>
+    <p class="note">Clientes identificados pelo 2º bloco do código SAP (tabela editável na aba <code>De_Para_Clientes</code> do Google Sheets; códigos 692 e 076 unificados em LG). Índice em vermelho: acima de 2× a média. Âmbar: acima da média.</p></div>
 </section>
 
 <!-- SLIDE 7 -->
 <section class="slide" id="s7">
-  <p class="eyebrow">Plano de ação · 5W2H integrado</p>
-  <h2>Quatro frentes cobrem o refugo evitável, começando por contaminação e janela de processo</h2>
-  <div class="panel"><div class="tablewrap"><table class="fw5">
-    <tr><th>O quê</th><th>Por quê</th><th>Onde</th><th>Como (ação técnica)</th><th>Quem</th><th>Quando</th><th>Meta e custo</th></tr>
-    <tr><td><strong>1 · Bloqueio de contaminação em resinas claras</strong></td>
-      <td id="td-7-1">Contaminação é a 2ª causa da filial (~14,9% do refugo total), concentrada nos painéis claros.</td>
-      <td>LG, Daikin, Whirlpool e Gree (Painéis Frontais, Grades de Entrada de Ar e Decors).</td>
-      <td>Vedar e limpar funis e linhas de alimentação. Rotina padronizada de purga química em troca de cor ou material. Inspecionar pontos mortos de plastificação (rosca, canhão, bico).</td>
-      <td>Engenharia de Processos, Produção, Qualidade</td><td>Rotina em 30 dias; auditoria semanal</td><td class="goal">−40% a −50% de Contaminação nos clientes-alvo. Custo médio (purga e vedação).</td></tr>
-    <tr><td><strong>2 · Estufagem e desumidificação em PC/ABS; limpeza de molde e canhão</strong></td>
-      <td id="td-7-2">Mancha + Espirrado somam ~12,8% do refugo global, além de ocorrências de Sujo de Óleo.</td>
-      <td>Mondial (Ornamento Lateral e Alça Superior PC/ABS) e Moto Honda (tampas e paralamas).</td>
-      <td>Auditar ponto de orvalho, temperatura e tempo de secagem dos desumidificadores. Conter Sujo de Óleo no molde. Rotina de purga para eliminar Mancha.</td>
-      <td>Engenharia de Processos, Manutenção, Ferramentaria</td><td>Auditoria em 30 dias; padrão em 60</td><td class="goal">−35% a −50% em Mancha e Espirrado. Custo baixo a médio.</td></tr>
-    <tr><td><strong>3 · Estabilização de janela de processo e partida de máquina</strong></td>
-      <td id="td-7-3">Falha de Injeção + Regulagem representam mais de 53% de todo o refugo da filial.</td>
-      <td>Todos os clientes, começando por Moto Honda, LG, Climazon, Mondial e Daikin.</td>
-      <td>Padronizar ficha técnica: comutação V/P, almofada, recalque, temperatura do molde, limpeza de saídas de gás. Revisar resfriamento e extração para Deformação.</td>
-      <td>Engenharia de Processos, Ferramentaria, Líder de Produção</td><td>Diagnóstico em 30 dias; padrão em 90</td><td class="goal">−25% a −35% nas duas causas. Custo baixo (horas de engenharia e manutenção de molde).</td></tr>
-    <tr><td><strong>4 · Rastreabilidade de apontamento</strong></td>
-      <td id="td-7-4">Refugo Não Digitado (14.681 pç em 238 produtos) impede identificar a causa raiz.</td>
-      <td>Terminais das injetoras e tablets do chão de fábrica.</td>
-      <td>Travar o fechamento de turno nos tablets/terminais sem classificação de refugo. Auditoria diária pelo líder.</td>
-      <td>Produção, TI industrial, Qualidade</td><td>Piloto em 15 dias; toda a filial em 45</td><td class="goal">Zerar Refugo Não Digitado. Custo baixo.</td></tr>
-  </table></div>
-  <p class="note">Prazos, responsáveis e metas são propostas iniciais para validação com a gestão da planta.</p></div>
+  <p class="eyebrow">Plano de ação · 5W2H dinâmico e integrado</p>
+  <h2 id="h7">Quatro frentes priorizadas automaticamente sobre as maiores causas reais do período</h2>
+  <div class="panel"><div class="tablewrap"><table class="fw5" id="t-5w2h"></table></div>
+  <p class="note">As 4 frentes são geradas a partir das maiores causas do recorte atual e sincronizadas com a aba <code>Plano_Acao</code> da planilha (status, responsáveis e prazos).</p></div>
 </section>
 
 <!-- SLIDE 8 -->
 <section class="slide" id="s8">
   <p class="eyebrow">Projeção de ganhos</p>
-  <h2 id="h8">Reduzir as principais causas pode levar o índice da filial de 1,23% para a faixa de 0,73% a 0,98%</h2>
-  <div class="seg" role="group" aria-label="Base de causas"><button id="b5" aria-pressed="true" id="btn-b5">5 causas</button><button id="b4" aria-pressed="false" id="btn-b4">4 causas</button></div>
+  <h2 id="h8">Simulação de redução nas principais causas</h2>
+  <div class="seg" role="group" aria-label="Base de causas"><button id="b5" aria-pressed="true">5 causas</button><button id="b4" aria-pressed="false">4 causas</button></div>
   <div class="split">
     <div class="panel"><div class="chart"><canvas id="c-gain"></canvas></div></div>
     <div style="display:grid;gap:16px" id="gcards"></div>
@@ -321,20 +333,23 @@ footer span{color:var(--muted);font-size:12px}
       <div class="preview-grid" id="preview-grid"></div>
     </div>
     <div class="field">
-      <label for="inp-pass">2. Senha de administrador para gravação</label>
+      <label for="inp-pass">2. Senha de administrador para gravação / desfazer</label>
       <input type="password" id="inp-pass" placeholder="Digite a senha definida no Apps Script">
     </div>
     <div class="field" id="api-cfg-wrap" style="display:none">
       <label for="inp-api">URL do Web App (Google Apps Script)</label>
       <input type="text" id="inp-api" placeholder="https://script.google.com/macros/s/.../exec">
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
       <button type="button" id="btn-toggle-api" style="background:none;border:0;color:var(--muted);font-size:11px;cursor:pointer;padding:0;text-decoration:underline">Configurar URL da API</button>
-      <span style="font-size:11px;color:var(--muted)">Trava ativa: bloqueia dias pulados ou duplicados</span>
+      <span style="font-size:11px;color:var(--muted)">Travas: grupo 000001-PRINCIPAL + datas contínuas</span>
     </div>
     <div class="modal-actions">
-      <button type="button" class="btn-sec" id="btn-cancel-import">Cancelar</button>
-      <button type="button" class="btn-pri" id="btn-submit-import" disabled>Validar e Enviar para Planilha</button>
+      <button type="button" class="btn-undo" id="btn-undo-import" title="Reverte a última importação feita na planilha" disabled>↺ Desfazer Última Importação</button>
+      <div class="modal-actions-right">
+        <button type="button" class="btn-sec" id="btn-cancel-import">Cancelar</button>
+        <button type="button" class="btn-pri" id="btn-submit-import" disabled>Validar e Enviar para Planilha</button>
+      </div>
     </div>
   </div>
 </div>
@@ -347,15 +362,27 @@ footer span{color:var(--muted);font-size:12px}
    ============================================================================ */
 const DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbybBrphqdD2_mi8d2klYVOZhud7oRoEARi5PeLeGh-ZT3HPb2uTvnW6kPPfoSW90Dwv1Q/exec"; // Ex: "https://script.google.com/macros/s/AKfycbx.../exec"
 
-/* Payload inicial embutido (01/01/2026 a 11/11/2026) como fallback instantâneo */
-const INITIAL_PAYLOAD = { ok: true, periodoInicio: "—", periodoFim: "—", ultimaAtualizacao: "", products: [], items: [] };
+const INITIAL_PAYLOAD = {
+  ok: true,
+  periodoInicio: "—",
+  periodoFim: "—",
+  ultimaAtualizacao: "",
+  products: [],
+  items: [],
+  timeline: [],
+  latestPeriod: null,
+  clientMap: {},
+  actionPlan: {},
+  hasUndo: false
+};
 
 const $=s=>document.querySelector(s);
 const fmt=n=>Math.round(n).toLocaleString('pt-BR');
 const pc=(n,d=2)=>Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
-const CLIENT_MAP = {
+/* Mapa padrão local (sobrescrito/complementado automaticamente pela aba De_Para_Clientes do Google Sheets) */
+const BASE_CLIENT_MAP = {
   '000': 'OBSOLETO / SEM MOLDE',
   '001': 'TUTIPLAST',
   '005': 'TANARIMAN',
@@ -366,8 +393,10 @@ const CLIENT_MAP = {
   '014': 'MERCOCOMPONENTES',
   '015': 'H.D.L',
   '021': 'ELGIN',
+  '022': 'WHIRLPOOL',
   '024': 'GATSBY',
   '028': 'GREE',
+  '031': 'CLIMAZON',
   '038': 'UNIVERSAL ELECTRONICS',
   '046': 'ALFATEC',
   '075': 'SALCOMP',
@@ -406,13 +435,16 @@ const CLIENT_MAP = {
   '139': 'SONY BRASIL',
   '140': 'YAMAHA MOTOR',
   '141': 'YASUFUKU POLIMEROS',
+  '143': 'MOTO HONDA',
   '144': 'FCC',
   '145': 'SCORPIOS',
   '147': 'GERTEC',
   '151': 'MERCO FITNESS DA AMAZONIA',
+  '155': 'ELGIN',
   '212': 'POSITIVO',
   '221': 'UNICOBA',
   '229': 'PST ELETRONICA',
+  '230': 'ENVISION',
   '239': 'ELGIN',
   '250': 'MULTILASER',
   '252': 'TRIAL',
@@ -422,20 +454,114 @@ const CLIENT_MAP = {
   '312': 'VENTTOS',
   '320': 'PRADOLUX',
   '323': 'BAJAJ',
+  '340': 'STECK',
   '341': 'JABIL',
   '344': 'ELCOA',
   '346': 'EVER ELETRIC',
   '455': 'SECULUS',
+  '488': 'TUTIPLAST',
+  '589': 'SCHNEIDER',
   '692': 'LG',
   '846': 'MONDIAL',
   '901': 'ASTRO TOYS'
 };
 
+let DYNAMIC_CLIENT_MAP = { ...BASE_CLIENT_MAP };
+
 function getClientName(code){
   const c = String(code || '').padStart(3, '0');
-  return CLIENT_MAP[c] || ('CLIENTE ' + c);
+  if (c === '076' || c === '692') return DYNAMIC_CLIENT_MAP['692'] || DYNAMIC_CLIENT_MAP['076'] || 'LG';
+  return DYNAMIC_CLIENT_MAP[c] || ('CLIENTE ' + c);
 }
 
+/* Dicionário Técnico de Ações Corretivas por Causa (usado no Slide 7 dinâmico) */
+const CAUSE_PLAYBOOK = {
+  'CONTAMINACAO': {
+    what: 'Bloqueio de contaminação em resinas e alimentação',
+    how: 'Vedar e limpar funis, silos e linhas de alimentação. Padronizar purga química em troca de cor ou material. Inspecionar pontos mortos de plastificação (rosca, canhão, bico).',
+    quem: 'Eng. Processos / Produção / Qualidade',
+    quando: 'Rotina em 30 dias; auditoria semanal',
+    meta: '−40% a −50% na causa nos clientes-alvo'
+  },
+  'FALHA DE INJECAO': {
+    what: 'Estabilização de janela de preenchimento e recalque',
+    how: 'Revisar perfil de velocidade de injeção, ponto de comutação V/P, almofada, pressão/tempo de recalque, temperatura do molde e limpeza das saídas de gás.',
+    quem: 'Eng. Processos / Ferramentaria / Líder Produção',
+    quando: 'Diagnóstico em 30 dias; padrão em 90',
+    meta: '−25% a −35% na incidência'
+  },
+  'REGULAGEM': {
+    what: 'Padronização de setup e partida de máquina',
+    how: 'Auditar cumprimento da Ficha Técnica de Injeção (FTI), checklist de partida, estabilização térmica de cilindro/molde e redução de trocas não programadas.',
+    quem: 'Eng. Processos / Líder Produção / Setup',
+    quando: 'Auditoria imediata; revisão em 60 dias',
+    meta: '−30% a −40% no refugo de partida'
+  },
+  'MANCHA': {
+    what: 'Eliminação de manchas superficiais e degradação térmica',
+    how: 'Verificar perfil de aquecimento do canhão, contrapressão, tempo de residência da resina, limpeza de bico/câmara quente e rotina de purga.',
+    quem: 'Eng. Processos / Manutenção / Produção',
+    quando: 'Auditoria em 30 dias; padrão em 60',
+    meta: '−35% a −50% na incidência'
+  },
+  'ESPIRRADO': {
+    what: 'Controle de umidade (estufagem) e desumidificação',
+    how: 'Auditar ponto de orvalho, temperatura e tempo de secagem nos desumidificadores (especialmente PC/ABS e higroscópicos) e vedação de tampas de funil.',
+    quem: 'Eng. Processos / Manutenção / Qualidade',
+    quando: 'Auditoria em 15 dias; rotina contínua',
+    meta: '−40% a −50% na incidência'
+  },
+  'DEFORMACAO': {
+    what: 'Controle de resfriamento, extração e empenamento',
+    how: 'Verificar vazão e temperatura dos circuitos de refrigeração do molde, tempo de resfriamento, balanceamento dos pinos extratores e manuseio na retirada.',
+    quem: 'Eng. Processos / Ferramentaria / Produção',
+    quando: 'Diagnóstico em 30 dias; ajuste em 60',
+    meta: '−30% a −40% na incidência'
+  },
+  'RISCO': {
+    what: 'Proteção de manuseio, embalagem e dispositivos de apoio',
+    how: 'Revisar berços de apoio na bancada, uso de luvas/embalagens protetoras entre camadas e curso de retirada do robô/operador.',
+    quem: 'Produção / Qualidade / Eng. Processos',
+    quando: 'Ação imediata em 15 dias',
+    meta: '−40% a −50% na incidência'
+  },
+  'REFUGO NAO DIGITADO': {
+    what: 'Rastreabilidade obrigatória de apontamento no chão de fábrica',
+    how: 'Travar o fechamento de turno nos terminais/tablets sem classificação de refugo e instituir auditoria diária pelo líder de turno.',
+    quem: 'Produção / TI Industrial / Qualidade',
+    quando: 'Piloto em 15 dias; toda a filial em 45',
+    meta: 'Zerar apontamentos sem causa'
+  },
+  'FORA DE COR': {
+    what: 'Controle de dosagem de masterbatch e limpeza de troca',
+    how: 'Calibrar dosadores gravimétricos/volumétricos, conferir lote de pigmento/masterbatch e reforçar purga na transição de tonalidades.',
+    quem: 'Qualidade / Eng. Processos / Produção',
+    quando: 'Ação em 30 dias',
+    meta: '−40% na incidência'
+  },
+  'QUEIMA': {
+    what: 'Alívio de aprisionamento de ar e ventilação do molde',
+    how: 'Limpar e aprofundar saídas de gás na linha de fechamento do molde e reduzir velocidade de injeção no final do preenchimento.',
+    quem: 'Ferramentaria / Eng. Processos',
+    quando: 'Manutenção preventiva em 30 dias',
+    meta: '−40% a −50% na incidência'
+  },
+  'REBARBA': {
+    what: 'Ajuste de força de fechamento e plano de partição do molde',
+    how: 'Verificar paralelismo e tonelagem de fechamento da injetora, pressão de comutação e desgaste na linha de fechamento do molde.',
+    quem: 'Ferramentaria / Eng. Processos',
+    quando: 'Inspeção em 30 dias',
+    meta: '−35% a −45% na incidência'
+  }
+};
+
+function normText(s){
+  return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toUpperCase();
+}
+
+let RAW_SERVER_PAYLOAD = INITIAL_PAYLOAD;
+let SELECTED_CLIENT = 'ALL';
+let SELECTED_WINDOW = 'CUMULATIVE';
 let STATE = null;
 const charts = {};
 let n5 = true;
@@ -446,35 +572,113 @@ function getApiUrl(){
 }
 
 /* ============================================================================
-   MOTOR ANALÍTICO: CONVERTE (products + items) EM TODOS OS INDICADORES DO PAINEL
+   NORMALIZAÇÃO CANÔNICA DE PRODUTOS (15 DÍGITOS SAP) + IDENTIFICAÇÃO DE CLIENTE
    ============================================================================ */
-function computeAnalytics(payload){
-  const prodsAll = payload.products || [];
-  const itemsAll = payload.items || [];
+function parseProdMeta(fullName){
+  const s = String(fullName || '').trim();
+  const mSap = /(\d{2}\.\d{3}\.\d{6}\.\d{2})/.exec(s);
+  const mFullSap = /(\d{2}\.\d{3}\.\d{6}\.\d{2}[.-]\d{2})/.exec(s);
+  const code = mFullSap ? mFullSap[1] : (mSap ? mSap[1] : s.split(' ')[0]);
+  const canonicalKey = mSap ? mSap[1] : normText(s);
 
-  // Filtra produtos ativos (produção > 0 ou refugo > 0) para estatísticas por produto
+  let rawFam = '000';
+  const parts = code.split('.');
+  if (parts.length >= 2 && /^\d{3}$/.test(parts[1])) rawFam = parts[1];
+
+  const client = getClientName(rawFam);
+  let desc = s.replace(code, '').trim();
+  // Remove eventual código numérico duplicado no início da descrição (ex: "096011 ...")
+  desc = desc.replace(/^\d{5,6}\s+/, '').trim();
+  if (!desc) desc = code;
+  return { code, canonicalKey, rawFam, client, desc, full: s };
+}
+
+/* ============================================================================
+   MOTOR ANALÍTICO: CONVERTE (payload + filtros ativos) EM TODOS OS INDICADORES
+   ============================================================================ */
+function computeAnalytics(basePayload, clientFilter, windowFilter){
+  // Selecionar base acumulada ou último período importado
+  let activeSource = basePayload;
+  if (windowFilter === 'LATEST' && basePayload.latestPeriod && Array.isArray(basePayload.latestPeriod.products)) {
+    activeSource = {
+      ...basePayload,
+      periodoInicio: basePayload.latestPeriod.periodoInicio,
+      periodoFim: basePayload.latestPeriod.periodoFim,
+      products: basePayload.latestPeriod.products,
+      items: basePayload.latestPeriod.items || []
+    };
+  }
+
+  const prodsRaw = activeSource.products || [];
+  const itemsRaw = activeSource.items || [];
+
+  // Consolidar produtos pela chave canônica de 15 dígitos SAP (evita fragmentação .00 vs -00 ou acentos)
+  const canonProdMap = new Map();
+  prodsRaw.forEach(p => {
+    const meta = parseProdMeta(p.produto);
+    const qP = Number(p.qtdProd) || 0;
+    const qR = Number(p.qtdRef) || 0;
+    const qL = Number(p.qtdLiq) || (qP - qR);
+    if (!canonProdMap.has(meta.canonicalKey)) {
+      canonProdMap.set(meta.canonicalKey, {
+        produto: meta.full,
+        code: meta.code,
+        canonicalKey: meta.canonicalKey,
+        client: meta.client,
+        desc: meta.desc,
+        qtdProd: qP,
+        qtdRef: qR,
+        qtdLiq: qL
+      });
+    } else {
+      const cur = canonProdMap.get(meta.canonicalKey);
+      if (meta.full.length > cur.produto.length) {
+        cur.produto = meta.full;
+        cur.code = meta.code;
+        cur.desc = meta.desc;
+      }
+      cur.qtdProd += qP;
+      cur.qtdRef  += qR;
+      cur.qtdLiq  += qL;
+    }
+  });
+
+  // Consolidar itens de causa pela mesma chave canônica do produto
+  const canonItems = [];
+  itemsRaw.forEach(it => {
+    const meta = parseProdMeta(it.produto);
+    const displayProd = canonProdMap.has(meta.canonicalKey) ? canonProdMap.get(meta.canonicalKey).produto : meta.full;
+    canonItems.push({
+      produto: displayProd,
+      canonicalKey: meta.canonicalKey,
+      client: meta.client,
+      refugo: String(it.refugo || '').trim(),
+      causa: String(it.causa || '').trim(),
+      qtdRef: Number(it.qtdRef) || 0
+    });
+  });
+
+  const allConsolidatedProds = Array.from(canonProdMap.values());
+
+  // Lista de todos os clientes presentes na base (para popular o dropdown)
+  const clientSet = new Set();
+  allConsolidatedProds.forEach(p => { if (p.qtdProd > 0 || p.qtdRef > 0) clientSet.add(p.client); });
+  const availableClients = Array.from(clientSet).sort((a,b) => a.localeCompare(b, 'pt-BR'));
+
+  // Aplicar filtro de Cliente se selecionado
+  const prodsAll = clientFilter && clientFilter !== 'ALL'
+    ? allConsolidatedProds.filter(p => p.client === clientFilter)
+    : allConsolidatedProds;
+  const itemsAll = clientFilter && clientFilter !== 'ALL'
+    ? canonItems.filter(it => it.client === clientFilter)
+    : canonItems;
+
   const activeProds = prodsAll.filter(p => (p.qtdProd > 0 || p.qtdRef > 0));
   const totalProd = prodsAll.reduce((a,p)=>a + p.qtdProd, 0);
   const totalRef  = prodsAll.reduce((a,p)=>a + p.qtdRef, 0);
   const totalLiq  = prodsAll.reduce((a,p)=>a + p.qtdLiq, 0);
   const globalIdx = totalProd > 0 ? (totalRef / totalProd) * 100 : 0;
 
-  // Extrair código SAP e Cliente (2º bloco; exceção: 692 e 076 pertencem ambos à LG)
-  function parseProdMeta(fullName){
-    const s = String(fullName || '').trim();
-    const mSap = /(\d{2}\.\d{3}\.\d{6}\.\d{2}[.-]\d{2})/.exec(s);
-    let code = mSap ? mSap[1] : s.split(' ')[0];
-    let rawFam = '000';
-    const parts = code.split('.');
-    if (parts.length >= 2 && /^\d{3}$/.test(parts[1])) rawFam = parts[1];
-    const fam = (rawFam === '076') ? '692' : rawFam;
-    const client = getClientName(fam);
-    let desc = s.replace(code, '').trim();
-    if (!desc) desc = code;
-    return { code, fam, rawFam, client, desc, full: s };
-  }
-
-  // Estatísticas descritivas helper
   function calcStats(arr){
     if (!arr.length) return { n:0, sum:0, mean:0, med:0, std:0, min:0, max:0 };
     const sorted = [...arr].sort((a,b)=>a-b);
@@ -487,39 +691,52 @@ function computeAnalytics(payload){
     return { n, sum, mean, med, std, min: sorted[0], max: sorted[n-1] };
   }
 
-  // Enriquecer produtos ativos
-  const enrichedProds = activeProds.map(p => {
-    const meta = parseProdMeta(p.produto);
-    const idx = p.qtdProd > 0 ? (p.qtdRef / p.qtdProd) * 100 : 0;
-    return { ...p, ...meta, idx };
-  });
+  const enrichedProds = activeProds.map(p => ({
+    ...p,
+    full: p.produto,
+    idx: p.qtdProd > 0 ? (p.qtdRef / p.qtdProd) * 100 : 0
+  }));
 
-  // Honda (fam 110) vs Demais
-  const hondaProds = enrichedProds.filter(p => p.fam === '110');
-  const otherProds = enrichedProds.filter(p => p.fam !== '110');
-  const hProd = hondaProds.reduce((a,p)=>a+p.qtdProd, 0);
-  const hRef  = hondaProds.reduce((a,p)=>a+p.qtdRef, 0);
-  const oProd = otherProds.reduce((a,p)=>a+p.qtdProd, 0);
-  const oRef  = otherProds.reduce((a,p)=>a+p.qtdRef, 0);
+  // Comparativo: Moto Honda vs Demais (quando Todos), ou Cliente Selecionado vs Restante da Filial (quando filtrado)
+  let cmpLeftLabel = 'Moto Honda';
+  let cmpRightLabel = 'Demais clientes';
+  let leftProds = enrichedProds.filter(p => p.client === 'MOTO HONDA');
+  let rightProds = enrichedProds.filter(p => p.client !== 'MOTO HONDA');
 
-  // Agrupamento por Família
-  const famMap = new Map();
+  if (clientFilter && clientFilter !== 'ALL') {
+    cmpLeftLabel = clientFilter;
+    cmpRightLabel = 'Demais clientes da filial';
+    leftProds = enrichedProds;
+    rightProds = allConsolidatedProds
+      .filter(p => (p.qtdProd > 0 || p.qtdRef > 0) && p.client !== clientFilter)
+      .map(p => ({ ...p, full: p.produto, idx: p.qtdProd > 0 ? (p.qtdRef / p.qtdProd) * 100 : 0 }));
+  }
+
+  const lProd = leftProds.reduce((a,p)=>a+p.qtdProd, 0);
+  const lRef  = leftProds.reduce((a,p)=>a+p.qtdRef, 0);
+  const rProd = rightProds.reduce((a,p)=>a+p.qtdProd, 0);
+  const rRef  = rightProds.reduce((a,p)=>a+p.qtdRef, 0);
+
+  // Agrupamento por Cliente (sempre sobre a base ativa filtrada)
+  const cliMap = new Map();
   enrichedProds.forEach(p => {
-    if (!famMap.has(p.fam)) famMap.set(p.fam, { fam: p.fam, prods: 0, prod: 0, ref: 0 });
-    const f = famMap.get(p.fam);
+    if (!cliMap.has(p.client)) cliMap.set(p.client, { client: p.client, prods: 0, prod: 0, ref: 0 });
+    const f = cliMap.get(p.client);
     f.prods += 1;
     f.prod += p.qtdProd;
     f.ref += p.qtdRef;
   });
-  const famList = Array.from(famMap.values()).map(f => ({
+  const cliList = Array.from(cliMap.values()).map(f => ({
     ...f,
-    idx: f.prod > 0 ? (f.ref / f.prod) * 100 : 0,
-    client: getClientName(f.fam)
+    idx: f.prod > 0 ? (f.ref / f.prod) * 100 : 0
   })).sort((a,b) => b.ref - a.ref);
 
   // Agrupamento por Causa (REFUGO)
   const causeMap = new Map();
-  const prodCauseMap = new Map(); // produto -> Map(refugoClean -> qtd)
+  const prodCauseMap = new Map();
+  const cliCauseMap = new Map();
+  const causeCliMap = new Map();
+
   itemsAll.forEach(it => {
     const rawRef = String(it.refugo || '').trim();
     if (!rawRef || rawRef.startsWith('***')) return;
@@ -531,41 +748,32 @@ function computeAnalytics(payload){
     if (!causeMap.has(name)) causeMap.set(name, { name, code, qtd: 0, prods: new Set() });
     const c = causeMap.get(name);
     c.qtd += qtd;
-    if (qtd > 0) c.prods.add(it.produto);
+    if (qtd > 0) c.prods.add(it.canonicalKey);
 
-    if (!prodCauseMap.has(it.produto)) prodCauseMap.set(it.produto, new Map());
-    const pm = prodCauseMap.get(it.produto);
+    if (!prodCauseMap.has(it.canonicalKey)) prodCauseMap.set(it.canonicalKey, new Map());
+    const pm = prodCauseMap.get(it.canonicalKey);
     pm.set(name, (pm.get(name) || 0) + qtd);
-  });
 
-  // Principais causas por família e ranking interno da Honda (110)
-  const famCauseMap = new Map();
-  const causeFamMap = new Map();
-  itemsAll.forEach(it => {
-    const rawRef = String(it.refugo || '').trim();
-    if (!rawRef || rawRef.startsWith('***')) return;
-    const mCode = /^(\d{6})\s+(.+)$/.exec(rawRef);
-    const name = mCode ? mCode[2].replace(/\s+/g, ' ').trim() : rawRef;
-    const fam = parseProdMeta(it.produto).fam;
-    const qtd = Number(it.qtdRef) || 0;
-    if (!famCauseMap.has(fam)) famCauseMap.set(fam, new Map());
-    const fm = famCauseMap.get(fam);
+    if (!cliCauseMap.has(it.client)) cliCauseMap.set(it.client, new Map());
+    const fm = cliCauseMap.get(it.client);
     fm.set(name, (fm.get(name) || 0) + qtd);
 
-    if (!causeFamMap.has(name)) causeFamMap.set(name, new Map());
-    const cf = causeFamMap.get(name);
-    cf.set(fam, (cf.get(fam) || 0) + qtd);
+    if (!causeCliMap.has(name)) causeCliMap.set(name, new Map());
+    const cf = causeCliMap.get(name);
+    cf.set(it.client, (cf.get(it.client) || 0) + qtd);
   });
 
+  // Ranking interno da Moto Honda (para comparação no Slide 2)
   const hondaRankMap = new Map();
-  const hondaCauses = famCauseMap.get('110');
+  const hondaCauses = cliCauseMap.get('MOTO HONDA');
   if (hondaCauses) {
     Array.from(hondaCauses.entries())
       .sort((a,b) => b[1] - a[1])
       .forEach(([nm], idx) => hondaRankMap.set(nm, idx + 1));
   }
-  famList.forEach(f => {
-    const fm = famCauseMap.get(f.fam);
+
+  cliList.forEach(f => {
+    const fm = cliCauseMap.get(f.client);
     if (!fm || f.ref === 0) { f.topCausesStr = '—'; return; }
     const top3 = Array.from(fm.entries()).sort((a,b)=>b[1]-a[1]).slice(0,3);
     f.topCausesStr = top3.map(([nm, q]) => `${nm} ${pc((q/f.ref)*100,1)}`).join(' · ');
@@ -585,21 +793,22 @@ function computeAnalytics(payload){
   const stProdLiq = calcStats(enrichedProds.map(p=>p.qtdLiq));
   const stProdRef = calcStats(enrichedProds.map(p=>p.qtdRef));
   const stProdIdx = calcStats(enrichedProds.map(p=>p.idx));
-  const stFamProd = calcStats(famList.map(f=>f.prod));
-  const stFamRef  = calcStats(famList.map(f=>f.ref));
-  const stFamIdx  = calcStats(famList.map(f=>f.idx));
+  const stCliProd = calcStats(cliList.map(f=>f.prod));
+  const stCliRef  = calcStats(cliList.map(f=>f.ref));
+  const stCliIdx  = calcStats(cliList.map(f=>f.idx));
   const stCauRef  = calcStats(causesList.map(c=>c.qtd));
   const stCauPct  = calcStats(causesList.map(c=>(c.qtd/totalCauseRef)*100));
 
-  // Top 10 Volume e Top 10 Índice (>50k)
+  // Top 10 Volume e Top 10 Índice (>50k, ou >10k se filtrado em cliente menor)
+  const minBatchIdx = (clientFilter && clientFilter !== 'ALL' && enrichedProds.filter(p=>p.qtdProd > 50000).length < 3) ? 10000 : 50000;
   const top10Vol = [...enrichedProds].sort((a,b)=>b.qtdRef - a.qtdRef).slice(0,10);
-  const top10Idx = enrichedProds.filter(p=>p.qtdProd > 50000).sort((a,b)=>b.idx - a.idx).slice(0,10);
-  const volCodesSet = new Set(top10Vol.map(p=>p.code));
-  const idxCodesSet = new Set(top10Idx.map(p=>p.code));
-  top10Vol.forEach(p => p.inBoth = idxCodesSet.has(p.code));
+  const top10Idx = enrichedProds.filter(p=>p.qtdProd > minBatchIdx).sort((a,b)=>b.idx - a.idx).slice(0,10);
+  const volKeysSet = new Set(top10Vol.map(p=>p.canonicalKey));
+  const idxKeysSet = new Set(top10Idx.map(p=>p.canonicalKey));
+  top10Vol.forEach(p => p.inBoth = idxKeysSet.has(p.canonicalKey));
   top10Idx.forEach(p => {
-    p.inBoth = volCodesSet.has(p.code);
-    const pm = prodCauseMap.get(p.full);
+    p.inBoth = volKeysSet.has(p.canonicalKey);
+    const pm = prodCauseMap.get(p.canonicalKey);
     if (pm && p.qtdRef > 0) {
       const best = Array.from(pm.entries()).sort((a,b)=>b[1]-a[1])[0];
       p.top1Str = best ? `${best[0]} ${pc((best[1]/p.qtdRef)*100,1)}` : '—';
@@ -612,7 +821,7 @@ function computeAnalytics(payload){
   const heatCols = ['FALHA DE INJEÇÃO','CONTAMINAÇÃO','REGULAGEM','MANCHA','ESPIRRADO','DEFORMAÇÃO','RISCO','REFUGO NÃO DIGITADO'];
   const heatLabels = ['Falha de Injeção','Contaminação','Regulagem','Mancha','Espirrado','Deformação','Risco','Não Dig.','Outras'];
   const heatMatrix = top10Vol.map(p => {
-    const pm = prodCauseMap.get(p.full) || new Map();
+    const pm = prodCauseMap.get(p.canonicalKey) || new Map();
     let knownSum = 0;
     const row = heatCols.map(cName => {
       const v = pm.get(cName) || 0;
@@ -627,7 +836,7 @@ function computeAnalytics(payload){
 
   // Top 5 causas por produto (Top 10 Volume)
   const top5List = top10Vol.map(p => {
-    const pm = prodCauseMap.get(p.full) || new Map();
+    const pm = prodCauseMap.get(p.canonicalKey) || new Map();
     const sortedC = Array.from(pm.entries()).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
     const t5 = sortedC.slice(0,5);
     const rest = sortedC.slice(5);
@@ -635,7 +844,6 @@ function computeAnalytics(payload){
     const restStr = rest.length
       ? `${fmt(restSum)} pçs (${pc((restSum/p.qtdRef)*100,1)}): ` + rest.map(([nm,q])=>`${nm} (${fmt(q)})`).join(', ')
       : 'Sem outras causas registradas.';
-    // Perfil A (Contaminação > 30%), C (Falha Injeção > 60%), B (Demais)
     const contamPct = ((pm.get('CONTAMINAÇÃO') || 0) / (p.qtdRef || 1)) * 100;
     const falhaPct  = ((pm.get('FALHA DE INJEÇÃO') || 0) / (p.qtdRef || 1)) * 100;
     const perfil = contamPct >= 30 ? 'A' : (falhaPct >= 60 ? 'C' : 'B');
@@ -648,82 +856,135 @@ function computeAnalytics(payload){
   });
 
   return {
-    rawPayload: payload,
     rawProducts: prodsAll,
     rawItems: itemsAll,
-    parseProdMeta,
-    periodoInicio: payload.periodoInicio,
-    periodoFim: payload.periodoFim,
-    ultimaAtualizacao: payload.ultimaAtualizacao,
+    availableClients,
+    clientFilter,
+    windowFilter,
+    minBatchIdx,
+    periodoInicio: activeSource.periodoInicio,
+    periodoFim: activeSource.periodoFim,
+    ultimaAtualizacao: basePayload.ultimaAtualizacao,
+    timeline: basePayload.timeline || [],
+    hasLatestPeriod: !!(basePayload.latestPeriod && Array.isArray(basePayload.latestPeriod.products)),
+    actionPlan: basePayload.actionPlan || {},
+    hasUndo: !!basePayload.hasUndo,
     totalProd, totalRef, totalLiq, globalIdx,
     activeCount: enrichedProds.length,
-    famCount: famList.length,
+    cliCount: cliList.length,
     causesCount: causesList.length,
-    honda: { prods: hondaProds.length, prod: hProd, ref: hRef, idx: hProd>0 ? (hRef/hProd)*100 : 0 },
-    outros: { prods: otherProds.length, prod: oProd, ref: oRef, idx: oProd>0 ? (oRef/oProd)*100 : 0 },
-    stProdQtd, stProdLiq, stProdRef, stProdIdx, stFamProd, stFamRef, stFamIdx, stCauRef, stCauPct,
-    causesList, totalCauseRef, hondaRankMap, causeFamMap,
+    cmpLeftLabel,
+    cmpRightLabel,
+    cmpLeft: { prods: leftProds.length, prod: lProd, ref: lRef, idx: lProd>0 ? (lRef/lProd)*100 : 0 },
+    cmpRight: { prods: rightProds.length, prod: rProd, ref: rRef, idx: rProd>0 ? (rRef/rProd)*100 : 0 },
+    stProdQtd, stProdLiq, stProdRef, stProdIdx, stCliProd, stCliRef, stCliIdx, stCauRef, stCauPct,
+    causesList, totalCauseRef, hondaRankMap, causeCliMap,
     top10Vol, top10Idx,
     heatLabels, heatMatrix,
     top5List,
-    famList
+    cliList
   };
 }
 
 /* ============================================================================
    RENDERIZAÇÃO DE TODOS OS SLIDES A PARTIR DO ESTADO CALCULADO
    ============================================================================ */
-function renderAll(payload){
-  STATE = computeAnalytics(payload);
+function renderAll(){
+  STATE = computeAnalytics(RAW_SERVER_PAYLOAD, SELECTED_CLIENT, SELECTED_WINDOW);
   const S = STATE;
   const isEmpty = S.activeCount === 0 && S.totalProd === 0;
+
+  // Atualizar dropdown de Clientes preservando seleção
+  const selCli = $('#sel-client');
+  const prevCli = SELECTED_CLIENT;
+  selCli.innerHTML = '<option value="ALL">Todos os Clientes (' + S.availableClients.length + ')</option>' +
+    S.availableClients.map(c => `<option value="${c}">${c}</option>`).join('');
+  if (prevCli !== 'ALL' && S.availableClients.includes(prevCli)) {
+    selCli.value = prevCli;
+  } else {
+    SELECTED_CLIENT = 'ALL';
+    selCli.value = 'ALL';
+  }
+
+  // Atualizar dropdown de Recorte Temporal
+  const selWin = $('#sel-window');
+  const optLatest = selWin.querySelector('option[value="LATEST"]');
+  if (S.hasLatestPeriod && RAW_SERVER_PAYLOAD.latestPeriod) {
+    optLatest.disabled = false;
+    optLatest.textContent = `Último Período (${RAW_SERVER_PAYLOAD.latestPeriod.periodoInicio} a ${RAW_SERVER_PAYLOAD.latestPeriod.periodoFim})`;
+  } else {
+    optLatest.disabled = true;
+    optLatest.textContent = 'Último Período (disponível após próximo envio)';
+    if (SELECTED_WINDOW === 'LATEST') {
+      SELECTED_WINDOW = 'CUMULATIVE';
+      selWin.value = 'CUMULATIVE';
+    }
+  }
+
+  // Badge de escopo ativo
+  const scopeCli = SELECTED_CLIENT === 'ALL' ? 'Filial Completa' : `Cliente: ${SELECTED_CLIENT}`;
+  const scopeWin = SELECTED_WINDOW === 'LATEST' ? 'Último Período' : 'Acumulado';
+  $('#filter-status').textContent = `Escopo: ${scopeCli} · ${scopeWin}`;
+
+  // Botão Desfazer no modal
+  $('#btn-undo-import').disabled = !S.hasUndo;
 
   // Cabeçalho
   $('#hdr-text').textContent = isEmpty
     ? 'Base vazia · Nenhum dado importado na planilha'
-    : `${S.periodoInicio} a ${S.periodoFim} · ${S.activeCount} produtos ativos · ${S.famCount} clientes · ${S.causesCount} causas`;
+    : `${S.periodoInicio} a ${S.periodoFim} · ${S.activeCount} produtos ativos · ${S.cliCount} cliente(s) · ${S.causesCount} causas`;
   $('#btn-export-xlsx').disabled = isEmpty;
   $('#btn-export-html').disabled = isEmpty;
 
   // Slide 1: KPIs
+  $('#eyebrow-s1').textContent = SELECTED_CLIENT === 'ALL'
+    ? 'Sumário executivo · Base Consolidada INJET (R086)'
+    : `Sumário executivo · Cliente ${SELECTED_CLIENT}`;
   $('#k-prod').textContent = (S.totalProd / 1e6).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' M';
   $('#k-prod-sub').textContent = `${fmt(S.totalProd)} peças · ${S.activeCount} produtos ativos`;
   $('#k-liq').textContent = (S.totalLiq / 1e6).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' M';
   $('#k-liq-sub').textContent = `${fmt(S.totalLiq)} peças · ${pc(100 - S.globalIdx)}`;
   $('#k-ref').textContent = fmt(S.totalRef);
   $('#k-idx').textContent = pc(S.globalIdx);
-  $('#k-idx-sub').textContent = `Período: ${S.periodoInicio} a ${S.periodoFim}`;
+  $('#k-idx-sub').textContent = isEmpty ? 'Período: aguardando importação' : `Período: ${S.periodoInicio} a ${S.periodoFim}`;
 
   const ratioProd = S.stProdRef.med > 0 ? (S.stProdRef.mean / S.stProdRef.med) : 0;
+  const scopeNoun = SELECTED_CLIENT === 'ALL' ? 'A filial' : `O cliente ${SELECTED_CLIENT}`;
   $('#h1').textContent = isEmpty
     ? 'Base zerada: importe um relatório do INJET (R086) para iniciar a análise'
-    : `A filial refuga ${pc(S.globalIdx)}, mas a média por produto é ${ratioProd.toFixed(1).replace('.',',')} vezes a mediana: poucos moldes concentram a perda`;
-  if (isEmpty) $('#k-idx-sub').textContent = 'Período: aguardando importação';
+    : `${scopeNoun} refuga ${pc(S.globalIdx)}, com média por produto ${ratioProd.toFixed(1).replace('.',',')} vezes a mediana: poucos moldes concentram a perda`;
 
-  // Honda vs Outros
-  const hProdPct = S.totalProd > 0 ? (S.honda.prod / S.totalProd) * 100 : 0;
-  const hRefPct  = S.totalRef > 0 ? (S.honda.ref / S.totalRef) * 100 : 0;
+  // Comparativo Esquerda vs Direita (Moto Honda vs Demais, ou Cliente Selecionado vs Restante da Filial)
+  $('#h-cmp').textContent = `${S.cmpLeftLabel} contra ${S.cmpRightLabel.toLowerCase()}`;
+  const totCmpProd = S.cmpLeft.prod + S.cmpRight.prod;
+  const totCmpRef  = S.cmpLeft.ref + S.cmpRight.ref;
+  const lProdPct = totCmpProd > 0 ? (S.cmpLeft.prod / totCmpProd) * 100 : 0;
+  const lRefPct  = totCmpRef > 0 ? (S.cmpLeft.ref / totCmpRef) * 100 : 0;
+
   $('#cmp').innerHTML = [
-    ['Produção', hProdPct, 100 - hProdPct],
-    ['Refugo', hRefPct, 100 - hRefPct]
-  ].map(r=>`<div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:4px"><span>${r[0]}</span><span>Honda ${pc(r[1])} · demais ${pc(r[2])}</span></div><div style="display:flex;height:22px;gap:2px"><i style="width:${r[1]}%;background:var(--accent);border-radius:2px 0 0 2px"></i><i style="flex:1;background:var(--warn);border-radius:0 2px 2px 0"></i></div></div>`).join('')
-  + `<div style="display:flex;gap:16px;font-size:12px;color:var(--ink-2)"><span><i style="display:inline-block;width:10px;height:10px;background:var(--accent);margin-right:6px"></i>Moto Honda</span><span><i style="display:inline-block;width:10px;height:10px;background:var(--warn);margin-right:6px"></i>Demais ${Math.max(0, S.famCount - 1)} clientes</span></div>`;
+    ['Produção', lProdPct, 100 - lProdPct],
+    ['Refugo', lRefPct, 100 - lRefPct]
+  ].map(r=>`<div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:4px"><span>${r[0]}</span><span>${S.cmpLeftLabel} ${pc(r[1])} · demais ${pc(r[2])}</span></div><div style="display:flex;height:22px;gap:2px"><i style="width:${r[1]}%;background:var(--accent);border-radius:2px 0 0 2px"></i><i style="flex:1;background:var(--warn);border-radius:0 2px 2px 0"></i></div></div>`).join('')
+  + `<div style="display:flex;gap:16px;font-size:12px;color:var(--ink-2)"><span><i style="display:inline-block;width:10px;height:10px;background:var(--accent);margin-right:6px"></i>${S.cmpLeftLabel}</span><span><i style="display:inline-block;width:10px;height:10px;background:var(--warn);margin-right:6px"></i>${S.cmpRightLabel}</span></div>`;
 
-  $('#lbl-honda').textContent = `Índice Moto Honda (${S.honda.prods} produtos)`;
-  $('#val-honda').textContent = pc(S.honda.idx);
-  $('#sub-honda').textContent = `${fmt(S.honda.ref)} pç em ${(S.honda.prod/1e6).toFixed(2).replace('.',',')} M`;
-  $('#lbl-outros').textContent = `Índice demais clientes (${S.outros.prods} produtos)`;
-  $('#val-outros').textContent = pc(S.outros.idx);
-  $('#sub-outros').textContent = `${fmt(S.outros.ref)} pç em ${(S.outros.prod/1e6).toFixed(2).replace('.',',')} M`;
+  $('#lbl-honda').textContent = `Índice ${S.cmpLeftLabel} (${S.cmpLeft.prods} produtos)`;
+  $('#val-honda').textContent = pc(S.cmpLeft.idx);
+  $('#sub-honda').textContent = `${fmt(S.cmpLeft.ref)} pç em ${(S.cmpLeft.prod/1e6).toFixed(2).replace('.',',')} M`;
+  $('#lbl-outros').textContent = `Índice ${S.cmpRightLabel.toLowerCase()} (${S.cmpRight.prods} produtos)`;
+  $('#val-outros').textContent = pc(S.cmpRight.idx);
+  $('#sub-outros').textContent = `${fmt(S.cmpRight.ref)} pç em ${(S.cmpRight.prod/1e6).toFixed(2).replace('.',',')} M`;
 
   const top1Cause = S.causesList[0] || { name:'—', qtd:0 };
-  const top1Fam = S.famList[0] || { fam:'—', ref:0 };
+  const top1Cli = S.cliList[0] || { client:'—', ref:0 };
   $('#ul-diag').innerHTML = `
     <li><strong>Assimetria forte:</strong> refugo médio por produto de ${fmt(S.stProdRef.mean)} peças contra mediana de ${fmt(S.stProdRef.med)} (${ratioProd.toFixed(1).replace('.',',')}×) e desvio-padrão de ${fmt(S.stProdRef.std)}.</li>
-    <li><strong>Causas ainda mais concentradas:</strong> média de ${fmt(S.stCauRef.mean)} peças por causa e mediana de ${fmt(S.stCauRef.med)}; a maior causa (${top1Cause.name}) vale ${fmt(top1Cause.qtd)}.</li>
-    <li><strong>Média simples engana:</strong> o índice médio por produto é ${pc(S.stProdIdx.mean)} (mediana ${pc(S.stProdIdx.med)}), contra ${pc(S.globalIdx)} ponderado. Lotes pequenos com taxa alta inflam a média.</li>
-    <li><strong>Clientes:</strong> mediana de ${fmt(S.stFamRef.med)} peças refugadas contra média de ${fmt(S.stFamRef.mean)}; o cliente ${top1Fam.client} sozinho tem ${fmt(top1Fam.ref)}.</li>
+    <li><strong>Causas concentradas:</strong> média de ${fmt(S.stCauRef.mean)} peças por causa e mediana de ${fmt(S.stCauRef.med)}; a maior causa (${top1Cause.name}) vale ${fmt(top1Cause.qtd)}.</li>
+    <li><strong>Média simples vs. ponderada:</strong> o índice médio por produto é ${pc(S.stProdIdx.mean)} (mediana ${pc(S.stProdIdx.med)}), contra ${pc(S.globalIdx)} ponderado.</li>
+    <li><strong>Clientes no recorte:</strong> ${S.cliCount === 1 ? `cliente selecionado ${top1Cli.client} soma ${fmt(top1Cli.ref)} peças refugadas.` : `mediana de ${fmt(S.stCliRef.med)} peças refugadas contra média de ${fmt(S.stCliRef.mean)}; ${top1Cli.client} lidera com ${fmt(top1Cli.ref)}.`}</li>
   `;
+
+  // Evolução Temporal badge
+  $('#pill-timeline').textContent = `${S.timeline.length} ${S.timeline.length === 1 ? 'período registrado' : 'períodos registrados'}`;
 
   // Tabela estatísticas descritivas
   const statRows = [
@@ -731,9 +992,9 @@ function renderAll(payload){
     ['Por produto','Qtd. boa', S.stProdLiq, false],
     ['Por produto','Qtd. refugada', S.stProdRef, false],
     ['Por produto','Índice de refugo', S.stProdIdx, true],
-    ['Por cliente','Qtd. produzida', S.stFamProd, false],
-    ['Por cliente','Qtd. refugada', S.stFamRef, false],
-    ['Por cliente','Índice de refugo', S.stFamIdx, true],
+    ['Por cliente','Qtd. produzida', S.stCliProd, false],
+    ['Por cliente','Qtd. refugada', S.stCliRef, false],
+    ['Por cliente','Índice de refugo', S.stCliIdx, true],
     ['Por causa','Qtd. refugada', S.stCauRef, false],
     ['Por causa','Participação (%)', S.stCauPct, true]
   ];
@@ -751,7 +1012,7 @@ function renderAll(payload){
   const top5Sum = top5C.reduce((a,c)=>a+c.qtd, 0);
   const top5Pct = S.totalCauseRef > 0 ? (top5Sum / S.totalCauseRef) * 100 : 0;
   $('#h2').textContent = isEmpty
-    ? 'Nenhuma causa de refugo registrada na base atual'
+    ? 'Nenhuma causa de refugo registrada no recorte atual'
     : `Cinco causas respondem por ${Math.round(top5Pct)}% do refugo, com ${top5C[0]?.name || ''} e ${top5C[1]?.name || ''} na liderança`;
   $('#h-par5').textContent = `Classe A do Pareto · ${fmt(top5Sum)} pç (${pc(top5Pct)})`;
   let cumC = 0;
@@ -762,29 +1023,27 @@ function renderAll(payload){
       return `<tr class="${isCont?'hl':''}"><td class="l">${c.name} · ${c.code}</td><td>${fmt(c.qtd)}</td><td>${pc((c.qtd/S.totalCauseRef)*100)}</td><td>${pc((cumC/S.totalCauseRef)*100)}</td><td>${c.prodsCount}</td></tr>`;
     }).join('');
 
-  // Card dinâmico da 2ª causa do Pareto
   const c2Obj = S.causesList[1];
   const c3Obj = S.causesList[2];
   if (!c2Obj) {
     $('#h-contam').textContent = 'Destaque Pareto: aguardando dados';
-    $('#p-contam').textContent = 'Nenhum registro de causa encontrado na planilha.';
+    $('#p-contam').textContent = 'Nenhum registro de causa encontrado no recorte atual.';
   } else {
     const hRank = S.hondaRankMap.get(c2Obj.name);
     const titleC2 = c2Obj.name.toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase());
-    $('#h-contam').textContent = hRank
-      ? `Achado: ${titleC2} (${hRank}ª na Honda → 2ª na filial)`
-      : `Destaque Pareto: ${titleC2} em 2º lugar`;
-    const cfMap = S.causeFamMap.get(c2Obj.name);
-    const topFamsC2 = cfMap
-      ? Array.from(cfMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([f,q])=>`${getClientName(f)} (${fmt(q)} pç)`).join(', ')
+    $('#h-contam').textContent = (SELECTED_CLIENT === 'ALL' && hRank)
+      ? `Achado: ${titleC2} (${hRank}ª na Moto Honda → 2ª na filial)`
+      : `2ª Maior Causa: ${titleC2}`;
+    const cfMap = S.causeCliMap.get(c2Obj.name);
+    const topClisC2 = (cfMap && SELECTED_CLIENT === 'ALL')
+      ? Array.from(cfMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([cli,q])=>`${cli} (${fmt(q)} pç)`).join(', ')
       : '';
     const cmpC3 = c3Obj ? ` e supera ${c3Obj.name} (${pc((c3Obj.qtd/S.totalCauseRef)*100)})` : '';
-    const hondaIntro = hRank ? `Na Moto Honda ocupava a ${hRank}ª posição. ` : '';
-    const famTrail = topFamsC2 ? ` Principais clientes: ${topFamsC2}.` : '';
-    $('#p-contam').innerHTML = `${hondaIntro}Na filial soma <strong style="color:var(--ink)">${fmt(c2Obj.qtd)} pç (${pc((c2Obj.qtd/S.totalCauseRef)*100)})</strong>${cmpC3}.${famTrail}`;
+    const hondaIntro = (SELECTED_CLIENT === 'ALL' && hRank) ? `Na Moto Honda ocupava a ${hRank}ª posição. ` : '';
+    const cliTrail = topClisC2 ? ` Principais clientes: ${topClisC2}.` : '';
+    $('#p-contam').innerHTML = `${hondaIntro}No recorte atual soma <strong style="color:var(--ink)">${fmt(c2Obj.qtd)} pç (${pc((c2Obj.qtd/S.totalCauseRef)*100)})</strong>${cmpC3}.${cliTrail}`;
   }
 
-  // Card dinâmico de Refugo Não Digitado
   const ndIdx = S.causesList.findIndex(c=>c.name.includes('NÃO DIGITADO'));
   const ndObj = ndIdx >= 0 ? S.causesList[ndIdx] : null;
   if (ndObj) {
@@ -792,19 +1051,20 @@ function renderAll(payload){
     $('#p-naodig').innerHTML = `<strong class="warn-t">${fmt(ndObj.qtd)} pç · ${pc((ndObj.qtd/S.totalCauseRef)*100)}</strong> em ${ndObj.prodsCount} produtos. A perda sem causa informada impede a ação corretiva.`;
   } else {
     $('#h-naodig').textContent = 'Rastreabilidade: Sem Refugo Não Digitado';
-    $('#p-naodig').innerHTML = 'Todos os apontamentos do período possuem causa classificada.';
+    $('#p-naodig').innerHTML = 'Todos os apontamentos do recorte possuem causa classificada.';
   }
 
   // Slide 3: Rankings
   const sumTop10V = S.top10Vol.reduce((a,p)=>a+p.qtdRef, 0);
   $('#pill-vol').textContent = `${fmt(sumTop10V)} pç · ${pc(S.totalRef > 0 ? (sumTop10V/S.totalRef)*100 : 0)}`;
-  if (!S.top10Idx.length) $('#pill-idx').textContent = '0,00%';
-  if (S.top10Idx.length) {
+  if (!S.top10Idx.length) {
+    $('#pill-idx').textContent = '0,00%';
+  } else {
     const minI = S.top10Idx[S.top10Idx.length-1].idx;
     const maxI = S.top10Idx[0].idx;
     $('#pill-idx').textContent = `${pc(minI)} a ${pc(maxI)}`;
   }
-  $('#note-s3').textContent = `Vermelho = produto presente nos dois rankings. Média global da filial: ${pc(S.globalIdx)}.`;
+  $('#note-s3').textContent = `Vermelho = produto presente nos dois rankings (lotes > ${(S.minBatchIdx/1000)} mil pç). Média do recorte: ${pc(S.globalIdx)}.`;
 
   $('#t-vol').innerHTML = '<tr><th>#</th><th class="l">Código SAP - Produto</th><th>Cliente</th><th>Refugo</th><th>Índice</th></tr>' +
     S.top10Vol.map((p,i)=>`<tr class="${p.inBoth?'out':''}"><td>${i+1}</td><td class="l">${p.code} - ${p.desc}</td><td>${p.client}</td><td>${fmt(p.qtdRef)}</td><td>${pc(p.idx)}</td></tr>`).join('');
@@ -815,9 +1075,9 @@ function renderAll(payload){
   const bothProds = S.top10Vol.filter(p=>p.inBoth);
   $('#h3').textContent = `${bothProds.length} produto(s) estão nos dois rankings: perdem muitas peças e com taxa crítica`;
   $('#cards-intersec').innerHTML = bothProds.map(p => {
-    const rVol = S.top10Vol.findIndex(x=>x.code===p.code) + 1;
-    const rIdx = S.top10Idx.findIndex(x=>x.code===p.code) + 1;
-    return `<div class="panel alert"><h3>${p.code} - ${p.desc}</h3><p style="margin:0;color:var(--ink-2)">${rVol}º em volume (${fmt(p.qtdRef)} pç) e <strong class="crit-t">${rIdx}º em índice (${pc(p.idx)})</strong>, ${(p.idx/(S.globalIdx||1)).toFixed(1).replace('.',',')}× a média da filial.</p></div>`;
+    const rVol = S.top10Vol.findIndex(x=>x.canonicalKey===p.canonicalKey) + 1;
+    const rIdx = S.top10Idx.findIndex(x=>x.canonicalKey===p.canonicalKey) + 1;
+    return `<div class="panel alert"><h3>${p.code} - ${p.desc}</h3><p style="margin:0;color:var(--ink-2)">${rVol}º em volume (${fmt(p.qtdRef)} pç) e <strong class="crit-t">${rIdx}º em índice (${pc(p.idx)})</strong>, ${(p.idx/(S.globalIdx||1)).toFixed(1).replace('.',',')}× a média do recorte.</p></div>`;
   }).join('');
 
   // Slide 4: Heatmap
@@ -826,7 +1086,7 @@ function renderAll(payload){
   // Slide 5: Top 5 por produto
   const pmStyle = {A:['Perfil A','background:var(--violet-pill-bg);color:var(--violet)'],B:['Perfil B','background:var(--pill-w-bg);color:var(--warn)'],C:['Perfil C','background:var(--pill-a-bg);color:var(--accent)']};
   const cc = n => /CONTAMIN/.test(n)?'--violet':/MANCHA|ESPIRR|SUJO/.test(n)?'--warn':/FALHA/.test(n)?'--accent':/REGUL/.test(n)?'--blue':/NÃO DIG/.test(n)?'--crit':'--muted';
-  let t5 = '<tr><th class="l">Produto</th><th>Fam.</th><th class="l">Perfil</th>' + [1,2,3,4,5].map(i=>`<th class="l">${i}ª causa</th>`).join('') + '</tr>';
+  let t5 = '<tr><th class="l">Produto</th><th>Cliente</th><th class="l">Perfil</th>' + [1,2,3,4,5].map(i=>`<th class="l">${i}ª causa</th>`).join('') + '</tr>';
   S.top5List.forEach((item, i) => {
     const cells5 = [0,1,2,3,4].map(k => {
       const c = item.top5[k];
@@ -842,7 +1102,6 @@ function renderAll(payload){
     d.hidden = !d.hidden;
   });
 
-  // Cards dinâmicos dos 3 Perfis de Falha (Slide 5)
   const profGroups = { A: [], B: [], C: [] };
   S.top5List.forEach(item => {
     if (profGroups[item.perfil]) profGroups[item.perfil].push(item);
@@ -904,38 +1163,20 @@ function renderAll(payload){
     </div>`;
   }).join('');
 
-  // Atualizar justificativas numéricas do Slide 7 (Plano 5W2H)
-  const getCauQtd = kw => {
-    const f = S.causesList.find(c => c.name.includes(kw));
-    return f ? f.qtd : 0;
-  };
-  const qCont = getCauQtd('CONTAMINA');
-  const rCont = S.causesList.findIndex(c => c.name.includes('CONTAMINA'));
-  const denCau = S.totalCauseRef || 1;
-  if (rCont >= 0) {
-    $('#td-7-1').textContent = `Contaminação é a ${rCont + 1}ª causa da filial (${fmt(qCont)} pç · ${pc((qCont/denCau)*100)}), concentrada nos painéis claros.`;
-  } else {
-    $('#td-7-1').textContent = 'Contaminação: 0 pç (0,00%) na base atual.';
-  }
-  const qManEsp = getCauQtd('MANCHA') + getCauQtd('ESPIRRADO');
-  $('#td-7-2').textContent = `Mancha + Espirrado somam ${fmt(qManEsp)} pç (${pc((qManEsp/denCau)*100)}), além de ocorrências de Sujo de Óleo.`;
-  const qFalReg = getCauQtd('FALHA DE INJE') + getCauQtd('REGULAGEM');
-  $('#td-7-3').textContent = `Falha de Injeção + Regulagem somam ${fmt(qFalReg)} pç (${pc((qFalReg/denCau)*100)} do refugo classificado).`;
-  if (ndObj) {
-    $('#td-7-4').textContent = `Refugo Não Digitado (${fmt(ndObj.qtd)} pç · ${pc((ndObj.qtd/denCau)*100)} em ${ndObj.prodsCount} produtos) impede identificar a causa raiz.`;
-  } else {
-    $('#td-7-4').textContent = 'Refugo Não Digitado: 0 pç (0,00%) na base atual.';
-  }
-
-  // Slide 6: Famílias
-  const top10Fam = S.famList.slice(0, 10);
-  const top5FamSum = S.famList.slice(0, 5).reduce((a,f)=>a+f.ref, 0);
-  const maxIdxFam = [...S.famList].sort((a,b)=>b.idx - a.idx)[0];
+  // Slide 6: Clientes
+  const top10Cli = S.cliList.slice(0, 10);
+  const top5CliSum = S.cliList.slice(0, 5).reduce((a,f)=>a+f.ref, 0);
+  const maxIdxCli = [...S.cliList].sort((a,b)=>b.idx - a.idx)[0];
   $('#h6').textContent = isEmpty
-    ? 'Nenhum cliente registrado na base atual'
-    : `Cinco clientes concentram ${pc(S.totalRef > 0 ? (top5FamSum/S.totalRef)*100 : 0,1)} do refugo; ${maxIdxFam?.client || ''} tem o maior índice, ${pc(maxIdxFam?.idx || 0)}`;
+    ? 'Nenhum cliente registrado no recorte atual'
+    : (S.cliCount === 1
+        ? `Cliente ${top10Cli[0].client}: ${fmt(top10Cli[0].ref)} peças refugadas (${pc(top10Cli[0].idx)})`
+        : `Cinco clientes concentram ${pc(S.totalRef > 0 ? (top5CliSum/S.totalRef)*100 : 0,1)} do refugo; ${maxIdxCli?.client || ''} tem o maior índice, ${pc(maxIdxCli?.idx || 0)}`);
   $('#t-fam').innerHTML = '<tr><th>#</th><th class="l">Cliente</th><th>Produtos</th><th>Produzida</th><th>Refugada</th><th>Índice</th><th>% refugo</th><th class="l">3 principais causas</th></tr>' +
-    top10Fam.map((f,i)=>`<tr class="${f.idx > S.globalIdx*2 ? 'out' : ''}"><td>${i+1}</td><td class="l"><strong>${f.client}</strong></td><td>${f.prods}</td><td>${fmt(f.prod)}</td><td>${fmt(f.ref)}</td><td style="color:${f.idx > S.globalIdx*2 ? 'var(--crit)' : f.idx > S.globalIdx ? 'var(--warn)' : 'inherit'};font-weight:600">${pc(f.idx)}</td><td>${pc(S.totalRef > 0 ? (f.ref/S.totalRef)*100 : 0)}</td><td class="l">${f.topCausesStr}</td></tr>`).join('');
+    top10Cli.map((f,i)=>`<tr class="${f.idx > S.globalIdx*2 ? 'out' : ''}"><td>${i+1}</td><td class="l"><strong>${f.client}</strong></td><td>${f.prods}</td><td>${fmt(f.prod)}</td><td>${fmt(f.ref)}</td><td style="color:${f.idx > S.globalIdx*2 ? 'var(--crit)' : f.idx > S.globalIdx ? 'var(--warn)' : 'inherit'};font-weight:600">${pc(f.idx)}</td><td>${pc(S.totalRef > 0 ? (f.ref/S.totalRef)*100 : 0)}</td><td class="l">${f.topCausesStr}</td></tr>`).join('');
+
+  // Slide 7: Plano 5W2H 100% dinâmico (Top 4 causas reais do recorte + status da aba Plano_Acao)
+  renderDynamic5W2H();
 
   // Slide 8 buttons labels
   const s5 = S.causesList.slice(0,5).reduce((a,c)=>a+c.qtd,0);
@@ -958,6 +1199,64 @@ function renderAll(payload){
   }
 }
 
+function renderDynamic5W2H(){
+  const S = STATE;
+  const top4Causes = S.causesList.slice(0, 4);
+  const denCau = S.totalCauseRef || 1;
+
+  if (!top4Causes.length) {
+    $('#h7').textContent = 'Plano de ação 5W2H aguardando importação de dados';
+    $('#t-5w2h').innerHTML = '<tr><th>O quê</th><th>Por quê</th><th>Onde</th><th>Como</th><th>Quem</th><th>Quando</th><th>Status / Meta</th></tr><tr><td colspan="7">Nenhum dado carregado.</td></tr>';
+    return;
+  }
+
+  const sumTop4 = top4Causes.reduce((a,c)=>a+c.qtd, 0);
+  $('#h7').textContent = `Quatro frentes atacam ${pc((sumTop4/denCau)*100,1)} do refugo (${fmt(sumTop4)} pç), começando por ${top4Causes[0].name}`;
+
+  const statusPill = st => {
+    const s = normText(st);
+    if (s.includes('CONCLUID')) return `<span class="pill a">${st}</span>`;
+    if (s.includes('ATRAS')) return `<span class="pill c">${st}</span>`;
+    if (s.includes('ANDAMENT')) return `<span class="pill b">${st}</span>`;
+    return `<span class="pill w">${st || 'Planejado'}</span>`;
+  };
+
+  let rowsHtml = '<tr><th>O quê (Frente)</th><th>Por quê (Impacto)</th><th>Onde (Clientes líderes)</th><th>Como (Ação técnica)</th><th>Quem</th><th>Quando</th><th>Status e Meta</th></tr>';
+
+  top4Causes.forEach((c, idx) => {
+    const nKey = normText(c.name);
+    const pb = CAUSE_PLAYBOOK[nKey] || {
+      what: `Contenção e redução de ${c.name}`,
+      how: `Investigar causas raiz de ${c.name} nos moldes líderes, revisar parâmetros de processo e instruir operadores.`,
+      quem: 'Eng. Processos / Qualidade / Produção',
+      quando: 'Diagnóstico em 30 dias',
+      meta: '−30% a −40% na incidência'
+    };
+    const sheetPlan = S.actionPlan[nKey] || {};
+    const status = sheetPlan.status || 'Em andamento';
+    const quem = sheetPlan.quem || pb.quem;
+    const quando = sheetPlan.quando || pb.quando;
+    const meta = sheetPlan.meta || pb.meta;
+
+    const cfMap = S.causeCliMap.get(c.name);
+    const topClis = cfMap
+      ? Array.from(cfMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([cli, q]) => `${cli} (${fmt(q)})`).join(', ')
+      : 'Todos os clientes';
+
+    rowsHtml += `<tr>
+      <td><strong>${idx+1} · ${pb.what}</strong><span style="font-size:11px;color:var(--muted)">Causa: ${c.name}</span></td>
+      <td><strong>${fmt(c.qtd)} pç (${pc((c.qtd/denCau)*100)})</strong>${idx+1}ª maior causa do recorte (${c.prodsCount} produtos afetados).</td>
+      <td>${topClis}.</td>
+      <td>${pb.how}</td>
+      <td>${quem}</td>
+      <td>${quando}</td>
+      <td class="goal"><div style="margin-bottom:6px">${statusPill(status)}</div>${meta}</td>
+    </tr>`;
+  });
+
+  $('#t-5w2h').innerHTML = rowsHtml;
+}
+
 function renderHeatmap(){
   const S = STATE;
   const rgb = css('--heat-rgb') || '242,184,75';
@@ -975,7 +1274,6 @@ function renderHeatmap(){
     }).join('') + `<td class="c"><strong>${fmt(tots[i])}</strong></td></tr>`;
   });
 
-  // Linha de soma Top 10
   const colSums = S.heatLabels.map((_, cIdx) => mx.reduce((a, r) => a + r[cIdx], 0));
   const grandTop10 = colSums.reduce((a,b)=>a+b, 0) || 1;
   h += '<tr class="stat"><td class="l">Soma Top 10</td>' + colSums.map(v => `<td class="c">${fmt(v)}<small>${pc((v/grandTop10)*100,1)}</small></td>`).join('') + `<td class="c"><strong>${fmt(grandTop10)}</strong></td></tr>`;
@@ -1000,6 +1298,21 @@ const hbar = (id,labels,data,colors,xt,fmtv) => new Chart($(id),{
 });
 
 const mk = {
+  timeline(){
+    const S = STATE;
+    const tl = S.timeline || [];
+    return new Chart($('#c-timeline'),{
+      data:{
+        labels: tl.map(t=>t.label),
+        datasets:[
+          {type:'bar',label:'Peças refugadas no período',data:tl.map(t=>t.qtdRef),yAxisID:'y',borderRadius:{topLeft:3,topRight:3},maxBarThickness:48,backgroundColor:css('--accent')},
+          {type:'line',label:'Índice de refugo (%)',data:tl.map(t=>t.idx),yAxisID:'y1',borderColor:css('--warn'),backgroundColor:css('--warn'),borderWidth:2.5,pointRadius:5,tension:0.15}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:lg,tooltip:{...tt(),callbacks:{title:i=>`Período: ${tl[i[0].dataIndex].inicio} a ${tl[i[0].dataIndex].fim}`,label:c=>c.dataset.yAxisID==='y1'?`${c.dataset.label}: ${pc(c.raw)}`:`${c.dataset.label}: ${fmt(c.raw)} pç`}}},
+        scales:{x:{grid:{display:false}},y:{grid:grid(),title:{display:true,text:'Peças refugadas'},ticks:{callback:v=>fmt(v)}},y1:{position:'right',min:0,grid:{display:false},title:{display:true,text:'Índice (%)'},ticks:{callback:v=>pc(v,1)}}}}
+    });
+  },
   pareto(){
     const S = STATE;
     const top12 = S.causesList.slice(0, 12);
@@ -1049,17 +1362,17 @@ const mk = {
   },
   fam(){
     const S = STATE;
-    const top10Fam = S.famList.slice(0, 10);
+    const top10Cli = S.cliList.slice(0, 10);
     return new Chart($('#c-fam'),{
       data:{
-        labels: top10Fam.map(f=>f.client),
+        labels: top10Cli.map(f=>f.client),
         datasets:[
-          {type:'bar',label:'Peças refugadas',data:top10Fam.map(f=>f.ref),yAxisID:'y',borderRadius:{topLeft:3,topRight:3},maxBarThickness:44,backgroundColor:top10Fam.map((f,i)=>i<5?css('--accent'):css('--bar-muted'))},
-          {type:'line',label:'Índice do cliente (%)',data:top10Fam.map(f=>f.idx),yAxisID:'y1',borderColor:css('--warn'),backgroundColor:top10Fam.map(f=>f.idx>5?css('--crit'):css('--warn')),borderWidth:2,pointRadius:top10Fam.map(f=>f.idx>5?7:4),tension:0},
-          {type:'line',label:`Média da filial ${pc(S.globalIdx)}`,data:top10Fam.map(()=>S.globalIdx),yAxisID:'y1',borderColor:css('--ink-2'),borderDash:[6,5],borderWidth:1.5,pointRadius:0}
+          {type:'bar',label:'Peças refugadas',data:top10Cli.map(f=>f.ref),yAxisID:'y',borderRadius:{topLeft:3,topRight:3},maxBarThickness:44,backgroundColor:top10Cli.map((f,i)=>i<5?css('--accent'):css('--bar-muted'))},
+          {type:'line',label:'Índice do cliente (%)',data:top10Cli.map(f=>f.idx),yAxisID:'y1',borderColor:css('--warn'),backgroundColor:top10Cli.map(f=>f.idx>5?css('--crit'):css('--warn')),borderWidth:2,pointRadius:top10Cli.map(f=>f.idx>5?7:4),tension:0},
+          {type:'line',label:`Média do recorte ${pc(S.globalIdx)}`,data:top10Cli.map(()=>S.globalIdx),yAxisID:'y1',borderColor:css('--ink-2'),borderDash:[6,5],borderWidth:1.5,pointRadius:0}
         ]
       },
-      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:lg,tooltip:{...tt(),callbacks:{title:i=>'Cliente: '+top10Fam[i[0].dataIndex].client,label:c=>c.dataset.yAxisID==='y1'?`${c.dataset.label}: ${pc(c.raw)}`:`${c.dataset.label}: ${fmt(c.raw)} pç`}}},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:lg,tooltip:{...tt(),callbacks:{title:i=>'Cliente: '+top10Cli[i[0].dataIndex].client,label:c=>c.dataset.yAxisID==='y1'?`${c.dataset.label}: ${pc(c.raw)}`:`${c.dataset.label}: ${fmt(c.raw)} pç`}}},
         scales:{x:{grid:{display:false},title:{display:true,text:'Cliente'}},y:{grid:grid(),title:{display:true,text:'Peças refugadas'},ticks:{callback:v=>Math.round(v/1000)+' mil'}},y1:{position:'right',min:0,grid:{display:false},title:{display:true,text:'Índice (%)'},ticks:{callback:v=>v+'%'}}}}
     });
   },
@@ -1068,7 +1381,7 @@ const mk = {
     return new Chart($('#c-gain'),{
       type:'bar',
       data:{labels:['Hoje','Conservador −25%','Moderado −35%','Agressivo −50%'],datasets:[{data:[S.globalIdx,0,0,0],borderRadius:{topLeft:3,topRight:3},maxBarThickness:80,backgroundColor:[css('--bar-muted'),css('--accent'),css('--accent'),css('--accent')]}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...tt(),callbacks:{label:c=>'Índice: '+pc(c.raw,2)}}},scales:{x:{grid:{display:false}},y:{min:0,max:Math.max(1.5, Number((S.globalIdx*1.25).toFixed(2))),grid,title:{display:true,text:'Índice global de refugo (%)'},ticks:{callback:v=>pc(v,1)}}}},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...tt(),callbacks:{label:c=>'Índice: '+pc(c.raw,2)}}},scales:{x:{grid:{display:false}},y:{min:0,max:Math.max(1.5, Number((S.globalIdx*1.25).toFixed(2))),grid:grid(),title:{display:true,text:'Índice global de refugo (%)'},ticks:{callback:v=>pc(v,1)}}}},
       plugins:[{id:'vl',afterDatasetsDraw(ch){const {ctx}=ch;ch.getDatasetMeta(0).data.forEach((b,i)=>{ctx.save();ctx.fillStyle=css('--ink');ctx.font='600 14px Space Grotesk, sans-serif';ctx.textAlign='center';ctx.fillText(pc(ch.data.datasets[0].data[i],2),b.x,b.y-8);ctx.restore()})}}]
     });
   }
@@ -1087,8 +1400,8 @@ function updateGain(){
   $('#t-gain').innerHTML = '<tr><th class="l">Causa</th><th>Peças hoje</th>' + scen.map(s=>`<th>Recuperadas −${s[1]*100}%</th>`).join('') + '</tr>' +
     cs.map(c=>`<tr><td class="l">${c.name}</td><td>${fmt(c.qtd)}</td>${scen.map(s=>`<td>${fmt(c.qtd*s[1])}</td>`).join('')}</tr>`).join('') +
     `<tr class="hl"><td class="l"><strong>Total</strong></td><td><strong>${fmt(baseSum)}</strong></td>${scen.map(s=>`<td><strong>${fmt(baseSum*s[1])}</strong></td>`).join('')}</tr>` +
-    `<tr><td class="l">Índice global resultante</td><td>${pc(S.globalIdx)}</td>${scen.map(s=>`<td>${pc(idxFn(baseSum*s[1]))}</td>`).join('')}</tr>`;
-  $('#h8').textContent = `Reduzir as ${cs.length} principais causas pode levar o índice da filial de ${pc(S.globalIdx)} para ${pc(idxFn(baseSum*.5)).replace('%','')}–${pc(idxFn(baseSum*.25))}`;
+    `<tr><td class="l">Índice resultante</td><td>${pc(S.globalIdx)}</td>${scen.map(s=>`<td>${pc(idxFn(baseSum*s[1]))}</td>`).join('')}</tr>`;
+  $('#h8').textContent = `Reduzir as ${cs.length} principais causas pode levar o índice de ${pc(S.globalIdx)} para ${pc(idxFn(baseSum*.5)).replace('%','')}–${pc(idxFn(baseSum*.25))}`;
   $('#b5').setAttribute('aria-pressed', n5);
   $('#b4').setAttribute('aria-pressed', !n5);
 }
@@ -1096,10 +1409,9 @@ $('#b5').onclick = () => { n5 = true; updateGain(); };
 $('#b4').onclick = () => { n5 = false; updateGain(); };
 
 /* ============================================================================
-   PARSER DO RELATÓRIO INJET R086 (.xls BRUTO OU .xlsx FORMATADO) VIA SHEETJS
+   PARSER DO RELATÓRIO INJET R086 (.xls BRUTO OU .xlsx FORMATADO) + TRAVA GRUPO
    ============================================================================ */
 function parseInjetWorkbook(workbook, fileName){
-  // Caso 1: Planilha já formatada (possui abas "Resumo por Produto" e "Base para Filtros")
   if (workbook.SheetNames.includes("Resumo por Produto") && workbook.SheetNames.includes("Base para Filtros")) {
     const rowsRes = XLSX.utils.sheet_to_json(workbook.Sheets["Resumo por Produto"], { header: 1, defval: "" });
     const rowsBas = XLSX.utils.sheet_to_json(workbook.Sheets["Base para Filtros"], { header: 1, defval: "" });
@@ -1135,10 +1447,9 @@ function parseInjetWorkbook(workbook, fileName){
         qtdRef: Number(rowsBas[r][3]) || 0
       });
     }
-    return { meta: { fileName, dataInicio, dataFim }, products, items };
+    return { meta: { fileName, dataInicio, dataFim, grupoMaquinas: "000001-PRINCIPAL" }, products, items };
   }
 
-  // Caso 2: Relatório bruto exportado direto do INJET (.xls / .xlsx)
   const sh = workbook.Sheets[workbook.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(sh, { header: 1, defval: "" });
 
@@ -1152,14 +1463,17 @@ function parseInjetWorkbook(workbook, fileName){
     return isFinite(n) ? n : 0;
   }
 
-  let dataInicio = "", dataFim = "";
+  let dataInicio = "", dataFim = "", grupoMaquinas = "";
   for (let r = 0; r < Math.min(20, rows.length); r++) {
     const line = rows[r].join(" ");
     const m = /PERÍODO:\s*(\d{2}\/\d{2}\/\d{4})\s*-\s*(\d{2}\/\d{2}\/\d{4})/i.exec(line);
     if (m) {
       dataInicio = m[1].split('/').reverse().join('-');
       dataFim = m[2].split('/').reverse().join('-');
-      break;
+    }
+    const mg = /GRUPO DE MÁQUINAS:\s*([^\s].*)$/i.exec(String(rows[r][0] || "").trim());
+    if (mg) {
+      grupoMaquinas = mg[1].trim();
     }
   }
 
@@ -1236,11 +1550,11 @@ function parseInjetWorkbook(workbook, fileName){
     });
   });
 
-  return { meta: { fileName, dataInicio, dataFim }, products, items };
+  return { meta: { fileName, dataInicio, dataFim, grupoMaquinas }, products, items };
 }
 
 /* ============================================================================
-   MODAL DE UPLOAD & SINCRONIZAÇÃO COM GOOGLE APPS SCRIPT
+   MODAL DE UPLOAD, UNDO & SINCRONIZAÇÃO COM GOOGLE APPS SCRIPT
    ============================================================================ */
 let parsedUpload = null;
 
@@ -1258,6 +1572,7 @@ function clearMsg(){
 $('#btn-open-import').onclick = () => {
   clearMsg();
   $('#inp-api').value = getApiUrl();
+  $('#btn-undo-import').disabled = !(STATE && STATE.hasUndo);
   $('#modal-import').classList.add('open');
 };
 $('#btn-close-import').onclick = $('#btn-cancel-import').onclick = () => {
@@ -1286,6 +1601,13 @@ $('#inp-file').onchange = async (e) => {
       setMsg('err', 'Não foi possível localizar a linha "PERÍODO: DD/MM/AAAA - DD/MM/AAAA" no arquivo. Verifique se é o relatório R086 do INJET.');
       return;
     }
+
+    // Trava de segurança: valida se o Grupo de Máquinas é 000001-PRINCIPAL
+    if (parsed.meta.grupoMaquinas && !parsed.meta.grupoMaquinas.toUpperCase().includes('000001-PRINCIPAL')) {
+      setMsg('err', `BLOQUEADO: Grupo de Máquinas inválido ("${parsed.meta.grupoMaquinas}"). Exporte o R086 usando "000001-PRINCIPAL".`);
+      return;
+    }
+
     if (parsed.products.length === 0) {
       setMsg('err', 'Nenhum produto foi encontrado neste arquivo.');
       return;
@@ -1309,6 +1631,14 @@ $('#inp-file').onchange = async (e) => {
     setMsg('err', 'Erro ao ler o arquivo Excel: ' + err.message);
   }
 };
+
+function applyServerPayload(payload){
+  RAW_SERVER_PAYLOAD = payload;
+  if (payload.clientMap && typeof payload.clientMap === 'object') {
+    DYNAMIC_CLIENT_MAP = { ...BASE_CLIENT_MAP, ...payload.clientMap };
+  }
+  renderAll();
+}
 
 $('#btn-submit-import').onclick = async () => {
   if (!parsedUpload) return;
@@ -1352,7 +1682,7 @@ $('#btn-submit-import').onclick = async () => {
     setMsg('ok', res.message || 'Dados atualizados com sucesso!');
     if (res.payload && res.payload.products) {
       localStorage.setItem('tutiplast_refugo_cache', JSON.stringify(res.payload));
-      renderAll(res.payload);
+      applyServerPayload(res.payload);
     }
     $('#btn-submit-import').disabled = false;
   } catch (err) {
@@ -1361,31 +1691,73 @@ $('#btn-submit-import').onclick = async () => {
   }
 };
 
+$('#btn-undo-import').onclick = async () => {
+  const apiUrl = ($('#inp-api').value || getApiUrl()).trim();
+  const password = $('#inp-pass').value;
+
+  if (!apiUrl) {
+    $('#api-cfg-wrap').style.display = 'block';
+    setMsg('err', 'Configure a URL do Web App antes de desfazer.');
+    return;
+  }
+  if (!password) {
+    setMsg('err', 'Digite a senha de administrador no campo acima para confirmar a reversão.');
+    return;
+  }
+  if (!confirm('Tem certeza que deseja desfazer a última importação e restaurar os valores anteriores da planilha?')) {
+    return;
+  }
+
+  $('#btn-undo-import').disabled = true;
+  setMsg('info', 'Restaurando snapshot anterior no Google Sheets...');
+
+  try {
+    const resp = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'undo', password })
+    });
+    const res = await resp.json();
+    if (!res.ok) {
+      setMsg('err', res.error || 'Não foi possível desfazer.');
+      $('#btn-undo-import').disabled = false;
+      return;
+    }
+    setMsg('ok', res.message || 'Última importação desfeita!');
+    if (res.payload) {
+      localStorage.setItem('tutiplast_refugo_cache', JSON.stringify(res.payload));
+      applyServerPayload(res.payload);
+    }
+  } catch (err) {
+    setMsg('err', 'Erro ao comunicar com o Apps Script: ' + err.message);
+    $('#btn-undo-import').disabled = false;
+  }
+};
+
 /* ============================================================================
-   EXPORTAÇÃO DO RELATÓRIO CONSOLIDADO PARA EXCEL (.xlsx) VIA SHEETJS
+   EXPORTAÇÃO PARA EXCEL (.xlsx) E HTML OFFLINE (.html)
    ============================================================================ */
 function exportReportXlsx(){
   if (!STATE || !STATE.rawProducts || STATE.rawProducts.length === 0) return;
   const S = STATE;
   const wb = XLSX.utils.book_new();
-  const periodoStr = `${S.periodoInicio} a ${S.periodoFim}`;
+  const periodoStr = `${S.periodoInicio} a ${S.periodoFim} (${SELECTED_CLIENT === 'ALL' ? 'Filial Completa' : SELECTED_CLIENT})`;
 
   // Aba 1: Resumo por Produto
   const aoaProd = [
     ["TUTIPLAST INDÚSTRIA E COMÉRCIO LTDA — RELATÓRIO CONSOLIDADO DE REFUGO (R086)"],
-    [`Período acumulado: ${periodoStr} | Gerado pelo Painel Web`],
+    [`Recorte: ${periodoStr} | Gerado pelo Painel Web`],
     [],
     ["PRODUTO", "CLIENTE", "QTD. PRODUZIDA (A)", "QTD. REFUGADA (B)", "QTD. LÍQUIDA", "% DE REFUGO (B/A)"]
   ];
   const prodTotalsMap = new Map();
   S.rawProducts.forEach(p => {
-    const meta = S.parseProdMeta(p.produto);
     const qP = Number(p.qtdProd) || 0;
     const qR = Number(p.qtdRef) || 0;
     const qL = Number(p.qtdLiq) || (qP - qR);
     const pct = qP > 0 ? Number(((qR / qP) * 100).toFixed(2)) : 0;
-    prodTotalsMap.set(String(p.produto).trim(), qP);
-    aoaProd.push([p.produto, meta.client, qP, qR, qL, pct]);
+    prodTotalsMap.set(p.canonicalKey, qP);
+    aoaProd.push([p.produto, p.client, qP, qR, qL, pct]);
   });
   aoaProd.push([
     "TOTAL GERAL",
@@ -1399,20 +1771,18 @@ function exportReportXlsx(){
   wsProd["!cols"] = [{wch:56},{wch:26},{wch:20},{wch:20},{wch:18},{wch:18}];
   XLSX.utils.book_append_sheet(wb, wsProd, "Resumo por Produto");
 
-  // Aba 2: Base para Filtros (100% tabular)
+  // Aba 2: Base para Filtros
   const aoaBase = [
     ["BASE DETALHADA POR PRODUTO E CAUSA — PRONTA PARA FILTROS E TABELA DINÂMICA"],
-    [`Período acumulado: ${periodoStr}`],
+    [`Recorte: ${periodoStr}`],
     [],
     ["PRODUTO", "CLIENTE", "REFUGO", "CAUSA", "QTD. REFUGADA (C)", "% DE REFUGO (C/A)"]
   ];
   S.rawItems.forEach(it => {
-    const pName = String(it.produto || "").trim();
-    const meta = S.parseProdMeta(pName);
     const qC = Number(it.qtdRef) || 0;
-    const qP = prodTotalsMap.get(pName) || 0;
+    const qP = prodTotalsMap.get(it.canonicalKey) || 0;
     const pctC = qP > 0 ? Number(((qC / qP) * 100).toFixed(2)) : 0;
-    aoaBase.push([pName, meta.client, it.refugo, it.causa, qC, pctC]);
+    aoaBase.push([it.produto, it.client, it.refugo, it.causa, qC, pctC]);
   });
   const wsBase = XLSX.utils.aoa_to_sheet(aoaBase);
   wsBase["!cols"] = [{wch:56},{wch:26},{wch:42},{wch:28},{wch:20},{wch:18}];
@@ -1421,7 +1791,7 @@ function exportReportXlsx(){
   // Aba 3: Pareto de Causas
   const aoaPareto = [
     ["PARETO DAS CAUSAS DE REFUGO"],
-    [`Período acumulado: ${periodoStr}`],
+    [`Recorte: ${periodoStr}`],
     [],
     ["RANKING", "CÓDIGO", "CAUSA DE REFUGO", "QTD. REFUGADA", "% DO TOTAL", "% ACUMULADO", "QTD. PRODUTOS AFETADOS"]
   ];
@@ -1439,11 +1809,11 @@ function exportReportXlsx(){
   // Aba 4: Desempenho por Cliente
   const aoaCli = [
     ["DESEMPENHO CONSOLIDADO POR CLIENTE"],
-    [`Período acumulado: ${periodoStr}`],
+    [`Recorte: ${periodoStr}`],
     [],
     ["RANKING", "CLIENTE", "PRODUTOS ATIVOS", "QTD. PRODUZIDA", "QTD. REFUGADA", "ÍNDICE DE REFUGO (%)", "% DO REFUGO TOTAL", "3 PRINCIPAIS CAUSAS"]
   ];
-  S.famList.forEach((f, idx) => {
+  S.cliList.forEach((f, idx) => {
     const pctTot = S.totalRef > 0 ? Number(((f.ref / S.totalRef) * 100).toFixed(2)) : 0;
     aoaCli.push([idx + 1, f.client, f.prods, f.prod, f.ref, Number(f.idx.toFixed(2)), pctTot, f.topCausesStr]);
   });
@@ -1453,33 +1823,28 @@ function exportReportXlsx(){
 
   const safeIni = String(S.periodoInicio || "").replace(/\//g, ".");
   const safeFim = String(S.periodoFim || "").replace(/\//g, ".");
-  const fileName = `REFUGO_FILIAL_CONSOLIDADO_${safeIni}_ATE_${safeFim}.xlsx`;
+  const tagCli = SELECTED_CLIENT === 'ALL' ? '' : `_${SELECTED_CLIENT.replace(/[^A-Z0-9]/gi, '_')}`;
+  const fileName = `REFUGO_FILIAL${tagCli}_${safeIni}_ATE_${safeFim}.xlsx`;
   XLSX.writeFile(wb, fileName);
 }
 
 $('#btn-export-xlsx').onclick = exportReportXlsx;
 
 function exportReportHtml(){
-  if (!STATE || !STATE.rawPayload || !STATE.rawProducts || STATE.rawProducts.length === 0) return;
+  if (!STATE || !RAW_SERVER_PAYLOAD || !STATE.rawProducts || STATE.rawProducts.length === 0) return;
   const S = STATE;
-  // Serializa o estado atual para gerar um arquivo HTML autônomo (offline-ready)
   const snapshotPayload = {
+    ...RAW_SERVER_PAYLOAD,
     ok: true,
-    periodoInicio: S.periodoInicio,
-    periodoFim: S.periodoFim,
-    ultimaAtualizacao: S.ultimaAtualizacao || new Date().toISOString(),
-    products: S.rawProducts,
-    items: S.rawItems
+    hasUndo: false
   };
   const serialized = JSON.stringify(snapshotPayload).replace(/<\/script/gi, '<\\/script');
 
   let docHtml = '<!doctype html>\n' + document.documentElement.outerHTML;
-  // Substitui INITIAL_PAYLOAD pelo snapshot atual para abrir offline já preenchido
   docHtml = docHtml.replace(
     /const INITIAL_PAYLOAD\s*=\s*[\s\S]*?;\s*\n/,
     `const INITIAL_PAYLOAD = ${serialized};\n`
   );
-  // Remove marcações dinâmicas geradas em tempo de execução nos containers para evitar duplicação antes do boot()
   docHtml = docHtml.replace(/<nav id="nav"[^>]*>[\s\S]*?<\/nav>/, '<nav id="nav" role="tablist" aria-label="Slides"></nav>');
   docHtml = docHtml.replace(/<div class="modal-backdrop open"/g, '<div class="modal-backdrop"');
 
@@ -1501,6 +1866,18 @@ function exportReportHtml(){
 $('#btn-export-html').onclick = exportReportHtml;
 
 /* ============================================================================
+   EVENTOS DE FILTRO (CLIENTE E RECORTE TEMPORAL)
+   ============================================================================ */
+$('#sel-client').onchange = (e) => {
+  SELECTED_CLIENT = e.target.value || 'ALL';
+  renderAll();
+};
+$('#sel-window').onchange = (e) => {
+  SELECTED_WINDOW = e.target.value || 'CUMULATIVE';
+  renderAll();
+};
+
+/* ============================================================================
    NAVEGAÇÃO E INICIALIZAÇÃO
    ============================================================================ */
 const titles = ['Sumário','Pareto de causas','Produtos críticos','Produto × causa','Perfis de falha','Clientes','Plano 5W2H','Ganho esperado'];
@@ -1513,7 +1890,7 @@ titles.forEach((t,i)=>{
   nav.appendChild(b);
 });
 
-const builders = { 2:['pareto'], 3:['vol','idx'], 6:['fam'], 8:['gain'] };
+const builders = { 1:['timeline'], 2:['pareto'], 3:['vol','idx'], 6:['fam'], 8:['gain'] };
 
 function go(n, noHash){
   n = Math.max(1, Math.min(N, n));
@@ -1560,7 +1937,6 @@ $('#v-heat').onclick = () => view(true);
 $('#v-bars').onclick = () => view(false);
 
 async function boot(){
-  // 1. Renderiza cache local (ou estado zerado) enquanto consulta a planilha
   let bootPayload = INITIAL_PAYLOAD;
   try {
     const cached = localStorage.getItem('tutiplast_refugo_cache');
@@ -1569,12 +1945,11 @@ async function boot(){
       if (parsed && parsed.ok && Array.isArray(parsed.products)) bootPayload = parsed;
     }
   } catch(e){}
-  renderAll(bootPayload);
+  applyServerPayload(bootPayload);
 
   const m0 = /slide-(\d)/.exec(location.hash);
   go(m0 ? +m0[1] : 1, true);
 
-  // 2. Sincroniza com o Google Sheets (inclusive se a planilha tiver sido zerada)
   const apiUrl = getApiUrl();
   if (apiUrl) {
     $('#sync-dot').classList.add('syncing');
@@ -1587,7 +1962,7 @@ async function boot(){
         } else {
           localStorage.setItem('tutiplast_refugo_cache', JSON.stringify(remote));
         }
-        renderAll(remote);
+        applyServerPayload(remote);
       }
     } catch(e) {
       console.warn('Falha ao sincronizar com Google Sheets (usando base local):', e);
@@ -1619,7 +1994,6 @@ function applyTheme(theme){
   }
   localStorage.setItem('tutiplast_refugo_theme', isLight ? 'light' : 'dark');
 
-  // Re-renderizar gráficos já ativos para aplicar cores do novo tema
   if (STATE) {
     Object.keys(charts).forEach(k => {
       if (charts[k]) { charts[k].destroy(); delete charts[k]; }
@@ -1641,9 +2015,7 @@ $('#btn-theme').onclick = () => {
   applyTheme(isCurrentlyLight ? 'dark' : 'light');
 };
 
-// Aplicar tema salvo antes de renderizar
 applyTheme(localStorage.getItem('tutiplast_refugo_theme') || 'dark');
-
 boot();
 </script>
 </body>
