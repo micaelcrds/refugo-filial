@@ -182,8 +182,16 @@ footer span{color:var(--muted);font-size:12px}
       <label for="sel-window">Recorte:</label>
       <select id="sel-window" class="filter-select">
         <option value="CUMULATIVE">Acumulado Consolidado</option>
-        <option value="LATEST" disabled>Último Período Importado (aguardando novo envio)</option>
+        <option value="LATEST" disabled>Último Período Importado</option>
+        <option value="CUSTOM">Intervalo Personalizado</option>
       </select>
+    </div>
+    <div class="filter-group" id="custom-dates-wrap" style="display:none">
+      <label for="inp-date-ini">De:</label>
+      <input type="date" id="inp-date-ini" class="filter-select" style="padding:3px 6px">
+      <label for="inp-date-fim">Até:</label>
+      <input type="date" id="inp-date-fim" class="filter-select" style="padding:3px 6px">
+      <button type="button" id="btn-apply-dates" class="btn-import" style="padding:4px 9px">Filtrar</button>
     </div>
     <span class="filter-badge" id="filter-status">Escopo: Filial Completa · Acumulado</span>
   </div>
@@ -202,10 +210,10 @@ footer span{color:var(--muted);font-size:12px}
     <div class="panel kpi hot"><div class="lbl">Índice global</div><div class="val" id="k-idx">0,00%</div><div class="sub" id="k-idx-sub">Período: —</div></div>
   </div>
   <div class="split" style="margin-bottom:16px">
-    <div class="panel"><h3 id="h-cmp">Moto Honda contra os demais clientes</h3>
+    <div class="panel"><h3 id="h-cmp">Honda contra os demais clientes</h3>
       <div id="cmp" style="display:grid;gap:14px;margin-top:12px"></div>
       <div class="grid g2" style="margin-top:16px">
-        <div><div class="lbl" style="color:var(--ink-2);font-size:12px" id="lbl-honda">Índice Moto Honda (0 produtos)</div><div class="val" style="font:700 28px var(--font-display)" id="val-honda">0,00%</div><div class="sub" style="color:var(--muted);font-size:12px" id="sub-honda">0 pç em 0,00 M</div></div>
+        <div><div class="lbl" style="color:var(--ink-2);font-size:12px" id="lbl-honda">Índice Honda (0 produtos)</div><div class="val" style="font:700 28px var(--font-display)" id="val-honda">0,00%</div><div class="sub" style="color:var(--muted);font-size:12px" id="sub-honda">0 pç em 0,00 M</div></div>
         <div><div class="lbl" style="color:var(--ink-2);font-size:12px" id="lbl-outros">Índice demais clientes (0 produtos)</div><div class="val warn-t" style="font:700 28px var(--font-display)" id="val-outros">0,00%</div><div class="sub" style="color:var(--muted);font-size:12px" id="sub-outros">0 pç em 0,00 M</div></div>
       </div></div>
     <div class="panel"><h3>Diagnóstico estatístico</h3>
@@ -370,6 +378,7 @@ const INITIAL_PAYLOAD = {
   products: [],
   items: [],
   timeline: [],
+  periodSnapshots: [],
   latestPeriod: null,
   clientMap: {},
   actionPlan: {},
@@ -383,87 +392,447 @@ const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim
 
 /* Mapa padrão local (sobrescrito/complementado automaticamente pela aba De_Para_Clientes do Google Sheets) */
 const BASE_CLIENT_MAP = {
-  '000': 'OBSOLETO / SEM MOLDE',
-  '001': 'TUTIPLAST',
-  '005': 'TANARIMAN',
-  '008': 'TEC TOY',
-  '010': 'SEMP TCL',
-  '012': 'MERCO FITNESS',
-  '013': 'SAMSUNG',
-  '014': 'MERCOCOMPONENTES',
-  '015': 'H.D.L',
-  '021': 'ELGIN',
-  '022': 'WHIRLPOOL',
-  '024': 'GATSBY',
-  '028': 'GREE',
-  '031': 'CLIMAZON',
-  '038': 'UNIVERSAL ELECTRONICS',
-  '046': 'ALFATEC',
-  '075': 'SALCOMP',
-  '076': 'LG',
-  '086': 'FEDERAL MOGUL (TENNECO)',
-  '089': 'MUSASHI',
-  '091': 'WEG',
-  '094': 'DOWERTECH (WAISON)',
-  '096': 'CLIMAZON',
-  '097': 'INTELBRAS',
-  '098': 'VISTEON',
-  '101': 'ELECTROLUX',
-  '103': 'NIPPON SEIKI',
-  '105': 'HONDA LOCK',
-  '110': 'MOTO HONDA',
-  '113': 'SIEMENS',
-  '114': 'JOHNSON',
-  '115': 'TECHNOS DA AMAZÔNIA',
-  '117': 'SAGEMCOM BRASIL',
-  '121': 'WHIRLPOOL',
-  '122': 'GENIS',
-  '123': 'DAIKIN',
-  '124': 'ENVISION',
-  '125': 'STECK',
-  '126': 'VENTISOL',
-  '128': 'ORIENT',
-  '129': 'TECHNICOLOR',
-  '130': 'HARMAN',
-  '131': 'TRANSIRE',
-  '133': 'INVENTUS',
-  '134': 'BRUDDEN',
-  '135': 'BRUDDEN - SP',
-  '136': 'HONDA COMPONENTES',
-  '137': 'METALFINO',
-  '138': 'SAWEM',
-  '139': 'SONY BRASIL',
-  '140': 'YAMAHA MOTOR',
-  '141': 'YASUFUKU POLIMEROS',
-  '143': 'MOTO HONDA',
-  '144': 'FCC',
-  '145': 'SCORPIOS',
-  '147': 'GERTEC',
-  '151': 'MERCO FITNESS DA AMAZONIA',
-  '155': 'ELGIN',
-  '212': 'POSITIVO',
-  '221': 'UNICOBA',
-  '229': 'PST ELETRONICA',
-  '230': 'ENVISION',
-  '239': 'ELGIN',
-  '250': 'MULTILASER',
-  '252': 'TRIAL',
-  '270': 'NEWLAND',
-  '274': 'LUMICENTER',
-  '276': 'SIGNIFY',
-  '312': 'VENTTOS',
-  '320': 'PRADOLUX',
-  '323': 'BAJAJ',
-  '340': 'STECK',
-  '341': 'JABIL',
-  '344': 'ELCOA',
-  '346': 'EVER ELETRIC',
-  '455': 'SECULUS',
-  '488': 'TUTIPLAST',
-  '589': 'SCHNEIDER',
-  '692': 'LG',
-  '846': 'MONDIAL',
-  '901': 'ASTRO TOYS'
+  '000': "OBSOLETO / SEM MOLDE",
+  '001': "TUTIPLAST",
+  '002': "REFLECT",
+  '003': "L A EMBALAGENS",
+  '004': "MASA",
+  '005': "TANARIMAN",
+  '006': "PAM",
+  '007': "TAPAJÓS MEDICAMENTOS",
+  '008': "TEC TOY",
+  '009': "MANUEL AUGUSTO PINTO",
+  '010': "SEMP TCL",
+  '011': "SAT BRAS",
+  '012': "UNIVERSAL FITNESS",
+  '013': "SAMSUNG",
+  '014': "UNIVERSAL COMPONENTES",
+  '015': "HDL",
+  '016': "ORBINOVA",
+  '017': "MASA",
+  '018': "VISIONTEC",
+  '019': "JOZIAS BARROS BABILONIA",
+  '020': "AMANOINJET",
+  '021': "ELGIN",
+  '022': "SPRIMATEC",
+  '023': "SUMMA POLIMEROS",
+  '024': "BRASTRONIC",
+  '025': "TERRA SOLUCOES INTEGRADAS",
+  '026': "FABER-CASTELL",
+  '027': "STRUTURAL COMER CONSTRUÇÃO",
+  '028': "GREE",
+  '029': "MIMAKI",
+  '030': "ENTEC MÁQUINAS",
+  '031': "SPRINGER CARRIER",
+  '032': "TECPLAM",
+  '033': "CHARLISTON A P",
+  '034': "MTJ MAFRA FERRAMENTARIA",
+  '035': "CLIPTECH",
+  '036': "PLATIT",
+  '037': "KAPERNORTE PAPÉIS",
+  '038': "UNIVERSAL ELECTRONICS",
+  '039': "BKF SOUZA",
+  '040': "FERRAMENTARIA JN",
+  '041': "CUNHA & CORREA",
+  '042': "TECH IN PLASTICO",
+  '043': "LOPES NETO BENEFICIAMENTO",
+  '044': "AMAZON JUNGLE CRUISE",
+  '045': "SALCOMP",
+  '046': "ALFATEC",
+  '047': "JAKSON RICARDO CAVALCANTI",
+  '048': "GREE",
+  '049': "ESPANTALHO PNEUS",
+  '050': "CIEAM",
+  '051': "A S CARMO",
+  '052': "AMAZON ETIQUETAS",
+  '053': "EXATA CARGO MAO",
+  '054': "UNIDADE HOSPITALAR NOVO",
+  '055': "2W ENERGIA",
+  '056': "COLORE ESPECIALIZADOS PINTURA",
+  '057': "COMPONEL",
+  '068': "TECHNICOLOR",
+  '070': "LINK",
+  '072': "NORTLUB RECICLAGEM ÓLEOS",
+  '075': "SALCOMP",
+  '076': "LG",
+  '079': "COELMATIC",
+  '080': "DUO PLASTIC",
+  '081': "ENCAIXE PRIME COMER",
+  '083': "GERTEC",
+  '084': "BIC",
+  '085': "CENTRO ATACADISTA BARAO",
+  '086': "STANLEY-ANGSTROM",
+  '087': "ETERNAL TRATAMENTO RESIDUOS",
+  '089': "MUSASHI",
+  '090': "CONTINENTAL",
+  '091': "WEG",
+  '092': "TRIAL",
+  '093': "TEMPO ENERGIA",
+  '094': "WASION",
+  '095': "VINORTE HOSPITALARES",
+  '096': "CLIMAZON",
+  '097': "INTELBRAS",
+  '098': "VISTEON",
+  '099': "ELO ELETRONICA",
+  '101': "ELECTROLUX",
+  '102': "KOSTAL",
+  '103': "NIPPON SEIKI",
+  '104': "FIXOMOLDE METALURGICA SET",
+  '105': "HONDA LOCK",
+  '106': "TRANSIRE",
+  '108': "JABIL",
+  '110': "HONDA",
+  '111': "SONY",
+  '112': "3M",
+  '113': "SIEMENS",
+  '114': "CERAS JOHNSON",
+  '115': "TECHNOS",
+  '116': "KMA",
+  '117': "SAGEMCOM",
+  '118': "HITACHI",
+  '119': "MOTO TRAXX",
+  '120': "FLEX MÁQUINAS MOTORES",
+  '121': "WHIRLPOOL",
+  '122': "GENIS",
+  '123': "DAIKIN",
+  '124': "ENVISION",
+  '125': "STECK",
+  '126': "VENTISOL",
+  '127': "DAFRA",
+  '128': "ORIENT",
+  '129': "VANTIVA",
+  '130': "HARMAN",
+  '131': "TRANSIRE",
+  '132': "DSA",
+  '133': "INVENTUS",
+  '134': "BRUDDEN",
+  '135': "BRUDDEN",
+  '136': "HONDA COMPONENTES",
+  '137': "METALFINO",
+  '138': "SAWEM",
+  '139': "SONY",
+  '140': "YAMAHA MOTOR",
+  '141': "YASUFUKU",
+  '142': "SOLE",
+  '143': "DENSO",
+  '144': "FCC",
+  '145': "SCORPIOS",
+  '146': "MC PLASTICOS",
+  '147': "GERTEC",
+  '148': "TEIJIN CHEMICALS PLASTIC",
+  '149': "YAMADA-LOM",
+  '150': "ITALUX PNEUS ACUMULADORES",
+  '151': "MERCO FITNESS",
+  '152': "CERAS JOHNSON",
+  '153': "TRANSIRE",
+  '154': "AVIAT CARGO EXPRESS",
+  '155': "TCL SEMP",
+  '156': "FORMAPACK",
+  '157': "ULTRAFARMA",
+  '158': "ERIC ALVES MESQUITA",
+  '159': "GEICE CAVALCANTE SILVA",
+  '160': "KOSTAL",
+  '161': "SOLUTEC TRATAMENDO RESÍDUOS",
+  '162': "GERTEC",
+  '163': "A S MACHINES",
+  '164': "SIEMENS",
+  '165': "UEA",
+  '166': "DEAL ENERGIA",
+  '167': "SINDICATO MÉDICO AMAZONAS",
+  '168': "FUNDO MUNICIPAL SAUDE",
+  '169': "GERTEC",
+  '170': "MEDICALTEC REPRESENTAÇÃO",
+  '171': "ASSOCIACAO PAIS MESTRES",
+  '172': "BANCO DA AMAZONIA",
+  '173': "VS",
+  '174': "R PIERONI &",
+  '175': "OMAR HOSPITALARES",
+  '176': "SHENZHN JINSUNWAY MOULD",
+  '177': "WHIRLPOOL",
+  '178': "DURAPETS ACESSORIOS ANIMAIS",
+  '179': "MSF HOSPITALARES",
+  '180': "TUTIPLAST",
+  '181': "LOTUS SERVICE GRAVAÇÕES",
+  '182': "PORTAL PLASTICOS",
+  '183': "AQUARIUS USINAGEM ESTAMPARIA",
+  '200': "TUTIPLAST",
+  '201': "MASA",
+  '202': "UBS REDENÇÃO",
+  '203': "GRANDE MOINHO CEARENSE",
+  '204': "PMM PREFEITURA MUNICIPAL",
+  '205': "TEC TOY",
+  '206': "FORMAPLAST",
+  '207': "SAFIRA",
+  '208': "BENDSTEEL",
+  '209': "TARGUS",
+  '210': "J COMPRI LIMA",
+  '211': "MCU",
+  '212': "POSITIVO",
+  '213': "EIRELLI",
+  '214': "FOXCONN",
+  '215': "CLAUDIA GODOY",
+  '216': "WHIRLPOOL",
+  '217': "MB BARROSO SILVEIRA",
+  '218': "BOREALIS",
+  '219': "ISONORTE ISOLAMENTO TERMO",
+  '220': "INSTITUTO SOKA",
+  '221': "UNICOBA",
+  '222': "BIOENERGIA BARRA",
+  '223': "IMM MOLDES",
+  '224': "FIPLAST VAREJISTA EMBALAGENS",
+  '225': "SENSE BICICLETAS",
+  '226': "ENERGETICA",
+  '227': "PLUSPLAS PLASTICO MAQUINAS",
+  '228': "NORPLAST",
+  '229': "PST ELETRONICA",
+  '230': "TPV",
+  '231': "TEC TOY",
+  '232': "ROYAL MAX",
+  '233': "VOLTZ",
+  '234': "J G RECUPERAÇÃO",
+  '235': "ZAFANI",
+  '236': "IGLISON LUIS SENA",
+  '237': "FRW POLÍMEROS",
+  '238': "VISTEON",
+  '239': "ELGIN",
+  '240': "VISTEON",
+  '241': "CM TRANSPORTE",
+  '242': "DUCATI",
+  '243': "SECRETARIA ESTADO SAÚDE",
+  '245': "DENSAM",
+  '246': "S.C. JOHNSON",
+  '247': "SAGEMCOM",
+  '248': "DUCATI",
+  '249': "DN PEREIRA RECICLAGEM",
+  '250': "GIGA",
+  '251': "MUSASHI",
+  '252': "TRIAL",
+  '253': "ELETROPAULO METROPOLITANA ELETRICIDADE",
+  '254': "A S CARMO",
+  '255': "FIT",
+  '256': "KIPACK",
+  '257': "POSITIVO",
+  '258': "TECHFIVE GESTAO TELECOMUNICACOES",
+  '259': "INSTITUTO FEDERAL EDUCAÇÃO",
+  '260': "B LOTTI MOVIMENTACAO",
+  '261': "MITUTOYO",
+  '262': "DIGITRON",
+  '263': "JAV COMERCIAL",
+  '264': "BIANCA MARINHO SILVA",
+  '265': "TRIAL",
+  '266': "ASSOCIACAO CULTURAL MOVIMENTO",
+  '267': "AMAZON LIMPA VASSOURAS",
+  '268': "TRIAL",
+  '269': "WEG",
+  '270': "TIM",
+  '271': "CERAS JOHNSON",
+  '272': "POSITIVO",
+  '273': "PLASMACHINE MAQUINAS EQUIP",
+  '274': "LUMICENTER",
+  '275': "EMILIO IZZI",
+  '276': "SIGNIFY",
+  '277': "GRIDSPERTISE",
+  '278': "M&P MOLD &",
+  '279': "RICARDO DALLA PRIA",
+  '280': "BASF",
+  '281': "SAMSUNG",
+  '282': "COPLAST",
+  '283': "AMEC SERV TRATAMENTO",
+  '284': "CLAUDIO ANTONIO BARRELLA",
+  '285': "POSITIVO",
+  '286': "COMPOL",
+  '287': "ECOMIX MOAGEM TRATAMENTO",
+  '288': "POSITIVO",
+  '289': "SICHUAN XIANGCHENG INTELLIGENT",
+  '290': "INSTITUTO 2D",
+  '291': "SÓ FITAS EMBALAGENS",
+  '292': "MP",
+  '293': "ITP SYSTEMS CONECTORES",
+  '294': "LOGIPLAS",
+  '295': "ASSOCIACAO CULTURAL MOVIMENTO",
+  '296': "ELGIN",
+  '297': "2AE AEREO RODOVIARIO",
+  '298': "CULLIGAN LATAM",
+  '300': "TUTIPLAST",
+  '301': "HONDA TRADING",
+  '302': "DARK COLOR",
+  '303': "ALFAPRINT DERPAC GRAFICA",
+  '304': "CASA OLEIRO MANAUS",
+  '305': "PETR AM SOLUÇÕES",
+  '306': "PST ELETRONICA",
+  '307': "CAL-COMP",
+  '308': "CMEI MADRE ANA",
+  '309': "ZOBELE BULGARIA EOOD",
+  '310': "POSITIVO",
+  '311': "AF CONSTRUTORA",
+  '312': "VENTTOS",
+  '313': "BENCAO TRANSPORTES CONSERVACAO",
+  '314': "AJ METAIS",
+  '315': "PRIMOTECNICA MECANICA ELETRICIDADE",
+  '316': "ASSOCIACAO CULTURAL ESPORTIVA",
+  '317': "RECICLAM RESIDUOS",
+  '318': "INSTITUTO PESQUISA FERTILIDADE",
+  '319': "LEANDRO PATRÍCIO LIMA",
+  '320': "PRADOLUX",
+  '321': "NANSEN",
+  '322': "M M ALMEIDA",
+  '323': "BAJAJ",
+  '324': "POSITIVO",
+  '325': "M3A COMPOSTOS",
+  '326': "RADACH NÃO TECIDOS",
+  '327': "JABIL",
+  '328': "MOVILE METALPLASTICA",
+  '329': "AMAZON MOTION",
+  '330': "ASAYAMA",
+  '331': "CAL-COMP",
+  '332': "BATISTA FERRAMENTARIA",
+  '333': "IME INSTITUTO METROPOLITANO",
+  '334': "FUCAPI",
+  '335': "GRUPO MULTI",
+  '336': "TUPA",
+  '337': "LIVOLTEK",
+  '338': "SPRINGER CARRIER",
+  '339': "IGREJA PRESBITERIANA MANAUS",
+  '340': "STECK",
+  '341': "JABIL",
+  '342': "SN ENGENHARIA INDUSTRIAIS",
+  '343': "AREA MISSIONARIA SAO",
+  '344': "ELCOA",
+  '345': "ASSOCIAÇÃO DESENVOLVIMENTO AMBIENTAL",
+  '346': "EVER ELETRIC",
+  '347': "SAFIRA",
+  '348': "ENGIE",
+  '349': "3M",
+  '350': "M COLLI",
+  '351': "SIGNIFY",
+  '352': "EFATA CONSTRUÇÃO CIVIL",
+  '353': "CARIBE RECICLAGEM RESÍDUOS",
+  '354': "NILTON LINS",
+  '355': "SENAI",
+  '356': "UFAM",
+  '357': "SIGNIFY",
+  '358': "AXIA ENERGIA",
+  '359': "FARÓIS VINCO",
+  '360': "SPRINGER CARRIER",
+  '361': "ESMAT JR",
+  '362': "OXIMAG MAGNETICOS",
+  '363': "NATURA",
+  '364': "FAI FUNDAÇÃO APOIO",
+  '365': "ANTON PAAR",
+  '366': "ANTON PAAR",
+  '367': "DR HERFELD GMBH",
+  '368': "TRIAL",
+  '369': "WENDELL COSTA SOUZA",
+  '370': "TABATHA FERNANDA LOPES",
+  '371': "KAIFA",
+  '372': "IFAM",
+  '373': "MOURA COSTA ALIMENTÍCIOS",
+  '374': "VALVE ALLIANCE",
+  '375': "TR CERATO CERATO",
+  '376': "SANTIPLAST",
+  '377': "LABELO PUCRS",
+  '400': "TUTIPLAST",
+  '437': "AVANPLAS",
+  '439': "COLORTECH",
+  '450': "MULTIPLAS",
+  '452': "TECH STEEL SERVILOS",
+  '455': "CONTINENTAL",
+  '456': "J G RODRIGUES",
+  '457': "S G NUNES",
+  '458': "AFEAM AGÊNCIA FOMENTOS",
+  '459': "CASA IDOSO SÃO",
+  '478': "STAR SEIKI",
+  '481': "L J GUERRA",
+  '485': "JASOT MAQ EQUIP",
+  '488': "TUTIPLAST",
+  '490': "CLIMAZON",
+  '497': "S C EMPREEND",
+  '500': "TUTIPLAST",
+  '501': "VISTEON",
+  '502': "VISTEON",
+  '503': "GRID PROJETOS",
+  '507': "INTELBRAS",
+  '515': "3R",
+  '532': "ELECTROLUX",
+  '542': "TSONG CHERNG MAQ",
+  '544': "ELO SISTEMAS",
+  '551': "VISTEON",
+  '560': "INTELBRAS",
+  '561': "INKCUPS NOW CORP",
+  '563': "MULTI UNIAO USINAGEM",
+  '570': "KOSTAL",
+  '582': "JOSE OLIVEIRA LEITÃO",
+  '583': "TLS USINAGEM FERRAMENTARIA",
+  '587': "ATTUALE",
+  '588': "TRIAL",
+  '589': "SYNTEX",
+  '591': "AMERICA SERVICE SOLUC",
+  '593': "TRIAL",
+  '599': "LITE-ON",
+  '600': "MOLDTOOL FERRAMENTARIA",
+  '601': "TELLESCOM",
+  '602': "SINDICATO TRABALHADORES SAÚDE",
+  '603': "DEFENSORIA PÚBLICA ESTADO",
+  '604': "VIDEOLAR",
+  '605': "SECRETARIA SAÚDE ESTADO",
+  '606': "FAPEAM",
+  '607': "TEC-PLAST",
+  '612': "TRIAL",
+  '613': "TECHMOLDE FERRAMENTARIA",
+  '614': "MSC COMPONENTES",
+  '615': "YUDO",
+  '616': "A L S",
+  '624': "RDA NEWS",
+  '641': "JABIL",
+  '650': "R A",
+  '651': "LONYPLASTS",
+  '654': "VISTEON",
+  '667': "SONY",
+  '675': "MARIA AUGUSTINHA GROLIMUND",
+  '678': "KRONOS",
+  '683': "RA METAL",
+  '685': "RBT RECICLAGEM",
+  '692': "LG",
+  '695': "ZAMRI",
+  '698': "DKPLAST",
+  '721': "COMETAIS",
+  '754': "IFER",
+  '758': "INSTITUICAO ADVENTISTA EDUCACAO",
+  '783': "R R SUPRIM",
+  '786': "SECULUS",
+  '787': "HIKE GARAGE RESTAURAÇÕES",
+  '796': "WAPMETAL",
+  '812': "PP RECUPERAÇÃO MAT",
+  '813': "AM PLAST",
+  '817': "HITACHI",
+  '822': "ELO SISTEMAS",
+  '824': "KOMLOG",
+  '833': "TRONY",
+  '838': "MAYKON CRISTIAN SILVA",
+  '839': "ACE SCHMERSAL",
+  '846': "MONDIAL",
+  '847': "MANAUS TURBO SERVIÇO",
+  '852': "SPRINGER CARRIER",
+  '858': "ORBINOVA",
+  '860': "MKS SILVA",
+  '862': "PIONEER YORKEY",
+  '870': "SANTOS MORAES MOLD",
+  '879': "J TOLEDO",
+  '881': "ANDRADE VIANA",
+  '883': "C S ANDRADE",
+  '886': "S.C. JOHNSON",
+  '901': "ASTRO TOYS",
+  '903': "CERAS JOHNSON",
+  '908': "METALNOBRE FERRAMENTARIA",
+  '910': "BRASITECH",
+  '911': "MAGNUM",
+  '915': "CAL-COMP",
+  '916': "CAL-COMP",
+  '938': "MENSHEN",
+  '939': "SHANGHAI JOHNSON",
+  '951': "JEAN APARECIDO FERREIRA",
+  '952': "LUIZ CARLOS GROLLA",
+  '8154': "TASIL ED PEÇAS"
 };
 
 let DYNAMIC_CLIENT_MAP = { ...BASE_CLIENT_MAP };
@@ -562,6 +931,8 @@ function normText(s){
 let RAW_SERVER_PAYLOAD = INITIAL_PAYLOAD;
 let SELECTED_CLIENT = 'ALL';
 let SELECTED_WINDOW = 'CUMULATIVE';
+let CUSTOM_DATE_INI = '';
+let CUSTOM_DATE_FIM = '';
 let STATE = null;
 const charts = {};
 let n5 = true;
@@ -574,10 +945,14 @@ function getApiUrl(){
 /* ============================================================================
    NORMALIZAÇÃO CANÔNICA DE PRODUTOS (15 DÍGITOS SAP) + IDENTIFICAÇÃO DE CLIENTE
    ============================================================================ */
+function formatSapHyphen(str){
+  return String(str || '').replace(/(\d{2}\.\d{3}\.\d{6}\.\d{2})\.(\d{2})/g, '$1-$2');
+}
+
 function parseProdMeta(fullName){
-  const s = String(fullName || '').trim();
+  const s = formatSapHyphen(String(fullName || '').trim());
   const mSap = /(\d{2}\.\d{3}\.\d{6}\.\d{2})/.exec(s);
-  const mFullSap = /(\d{2}\.\d{3}\.\d{6}\.\d{2}[.-]\d{2})/.exec(s);
+  const mFullSap = /(\d{2}\.\d{3}\.\d{6}\.\d{2}-\d{2})/.exec(s);
   const code = mFullSap ? mFullSap[1] : (mSap ? mSap[1] : s.split(' ')[0]);
   const canonicalKey = mSap ? mSap[1] : normText(s);
 
@@ -587,7 +962,6 @@ function parseProdMeta(fullName){
 
   const client = getClientName(rawFam);
   let desc = s.replace(code, '').trim();
-  // Remove eventual código numérico duplicado no início da descrição (ex: "096011 ...")
   desc = desc.replace(/^\d{5,6}\s+/, '').trim();
   if (!desc) desc = code;
   return { code, canonicalKey, rawFam, client, desc, full: s };
@@ -597,7 +971,7 @@ function parseProdMeta(fullName){
    MOTOR ANALÍTICO: CONVERTE (payload + filtros ativos) EM TODOS OS INDICADORES
    ============================================================================ */
 function computeAnalytics(basePayload, clientFilter, windowFilter){
-  // Selecionar base acumulada ou último período importado
+  // Selecionar base acumulada, último período importado ou intervalo personalizado (De / Até)
   let activeSource = basePayload;
   if (windowFilter === 'LATEST' && basePayload.latestPeriod && Array.isArray(basePayload.latestPeriod.products)) {
     activeSource = {
@@ -606,6 +980,28 @@ function computeAnalytics(basePayload, clientFilter, windowFilter){
       periodoFim: basePayload.latestPeriod.periodoFim,
       products: basePayload.latestPeriod.products,
       items: basePayload.latestPeriod.items || []
+    };
+  } else if (windowFilter === 'CUSTOM' && CUSTOM_DATE_INI && CUSTOM_DATE_FIM) {
+    const snaps = Array.isArray(basePayload.periodSnapshots) ? basePayload.periodSnapshots : [];
+    const matched = snaps.filter(sp => {
+      const sIni = sp.isoInicio || (sp.periodoInicio ? sp.periodoInicio.split('/').reverse().join('-') : '');
+      const sFim = sp.isoFim || (sp.periodoFim ? sp.periodoFim.split('/').reverse().join('-') : '');
+      return sIni && sFim && sFim >= CUSTOM_DATE_INI && sIni <= CUSTOM_DATE_FIM;
+    });
+    const mergedProds = [];
+    const mergedItems = [];
+    matched.forEach(sp => {
+      (sp.products || []).forEach(p => mergedProds.push(p));
+      (sp.items || []).forEach(it => mergedItems.push(it));
+    });
+    const brIni = CUSTOM_DATE_INI.split('-').reverse().join('/');
+    const brFim = CUSTOM_DATE_FIM.split('-').reverse().join('/');
+    activeSource = {
+      ...basePayload,
+      periodoInicio: brIni,
+      periodoFim: brFim,
+      products: mergedProds,
+      items: mergedItems
     };
   }
 
@@ -697,11 +1093,11 @@ function computeAnalytics(basePayload, clientFilter, windowFilter){
     idx: p.qtdProd > 0 ? (p.qtdRef / p.qtdProd) * 100 : 0
   }));
 
-  // Comparativo: Moto Honda vs Demais (quando Todos), ou Cliente Selecionado vs Restante da Filial (quando filtrado)
-  let cmpLeftLabel = 'Moto Honda';
+  // Comparativo: Honda vs Demais (quando Todos), ou Cliente Selecionado vs Restante da Filial (quando filtrado)
+  let cmpLeftLabel = 'Honda';
   let cmpRightLabel = 'Demais clientes';
-  let leftProds = enrichedProds.filter(p => p.client === 'MOTO HONDA');
-  let rightProds = enrichedProds.filter(p => p.client !== 'MOTO HONDA');
+  let leftProds = enrichedProds.filter(p => p.client === 'HONDA');
+  let rightProds = enrichedProds.filter(p => p.client !== 'HONDA');
 
   if (clientFilter && clientFilter !== 'ALL') {
     cmpLeftLabel = clientFilter;
@@ -763,9 +1159,9 @@ function computeAnalytics(basePayload, clientFilter, windowFilter){
     cf.set(it.client, (cf.get(it.client) || 0) + qtd);
   });
 
-  // Ranking interno da Moto Honda (para comparação no Slide 2)
+  // Ranking interno da Honda (para comparação no Slide 2)
   const hondaRankMap = new Map();
-  const hondaCauses = cliCauseMap.get('MOTO HONDA');
+  const hondaCauses = cliCauseMap.get('HONDA');
   if (hondaCauses) {
     Array.from(hondaCauses.entries())
       .sort((a,b) => b[1] - a[1])
@@ -906,7 +1302,7 @@ function renderAll(){
     selCli.value = 'ALL';
   }
 
-  // Atualizar dropdown de Recorte Temporal
+  // Atualizar dropdown de Recorte Temporal e inputs de data
   const selWin = $('#sel-window');
   const optLatest = selWin.querySelector('option[value="LATEST"]');
   if (S.hasLatestPeriod && RAW_SERVER_PAYLOAD.latestPeriod) {
@@ -921,9 +1317,25 @@ function renderAll(){
     }
   }
 
+  // Inicializar limites min/max dos inputs de data personalizada com base no histórico
+  const tl = RAW_SERVER_PAYLOAD.timeline || [];
+  if (tl.length > 0) {
+    const minIso = tl[0].isoInicio || tl[0].inicio.split('/').reverse().join('-');
+    const maxIso = tl[tl.length - 1].isoFim || tl[tl.length - 1].fim.split('/').reverse().join('-');
+    $('#inp-date-ini').min = minIso;
+    $('#inp-date-ini').max = maxIso;
+    $('#inp-date-fim').min = minIso;
+    $('#inp-date-fim').max = maxIso;
+    if (!CUSTOM_DATE_INI) { CUSTOM_DATE_INI = minIso; $('#inp-date-ini').value = minIso; }
+    if (!CUSTOM_DATE_FIM) { CUSTOM_DATE_FIM = maxIso; $('#inp-date-fim').value = maxIso; }
+  }
+  $('#custom-dates-wrap').style.display = SELECTED_WINDOW === 'CUSTOM' ? 'inline-flex' : 'none';
+
   // Badge de escopo ativo
   const scopeCli = SELECTED_CLIENT === 'ALL' ? 'Filial Completa' : `Cliente: ${SELECTED_CLIENT}`;
-  const scopeWin = SELECTED_WINDOW === 'LATEST' ? 'Último Período' : 'Acumulado';
+  const scopeWin = SELECTED_WINDOW === 'LATEST'
+    ? 'Último Período'
+    : (SELECTED_WINDOW === 'CUSTOM' ? `${S.periodoInicio} a ${S.periodoFim}` : 'Acumulado');
   $('#filter-status').textContent = `Escopo: ${scopeCli} · ${scopeWin}`;
 
   // Botão Desfazer no modal
@@ -954,7 +1366,7 @@ function renderAll(){
     ? 'Base zerada: importe um relatório do INJET (R086) para iniciar a análise'
     : `${scopeNoun} refuga ${pc(S.globalIdx)}, com média por produto ${ratioProd.toFixed(1).replace('.',',')} vezes a mediana: poucos moldes concentram a perda`;
 
-  // Comparativo Esquerda vs Direita (Moto Honda vs Demais, ou Cliente Selecionado vs Restante da Filial)
+  // Comparativo Esquerda vs Direita (Honda vs Demais, ou Cliente Selecionado vs Restante da Filial)
   $('#h-cmp').textContent = `${S.cmpLeftLabel} contra ${S.cmpRightLabel.toLowerCase()}`;
   const totCmpProd = S.cmpLeft.prod + S.cmpRight.prod;
   const totCmpRef  = S.cmpLeft.ref + S.cmpRight.ref;
@@ -1032,14 +1444,14 @@ function renderAll(){
     const hRank = S.hondaRankMap.get(c2Obj.name);
     const titleC2 = c2Obj.name.toLowerCase().replace(/(?:^|\s)\S/g, l => l.toUpperCase());
     $('#h-contam').textContent = (SELECTED_CLIENT === 'ALL' && hRank)
-      ? `Achado: ${titleC2} (${hRank}ª na Moto Honda → 2ª na filial)`
+      ? `Achado: ${titleC2} (${hRank}ª na Honda → 2ª na filial)`
       : `2ª Maior Causa: ${titleC2}`;
     const cfMap = S.causeCliMap.get(c2Obj.name);
     const topClisC2 = (cfMap && SELECTED_CLIENT === 'ALL')
       ? Array.from(cfMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([cli,q])=>`${cli} (${fmt(q)} pç)`).join(', ')
       : '';
     const cmpC3 = c3Obj ? ` e supera ${c3Obj.name} (${pc((c3Obj.qtd/S.totalCauseRef)*100)})` : '';
-    const hondaIntro = (SELECTED_CLIENT === 'ALL' && hRank) ? `Na Moto Honda ocupava a ${hRank}ª posição. ` : '';
+    const hondaIntro = (SELECTED_CLIENT === 'ALL' && hRank) ? `Na Honda ocupava a ${hRank}ª posição. ` : '';
     const cliTrail = topClisC2 ? ` Principais clientes: ${topClisC2}.` : '';
     $('#p-contam').innerHTML = `${hondaIntro}No recorte atual soma <strong style="color:var(--ink)">${fmt(c2Obj.qtd)} pç (${pc((c2Obj.qtd/S.totalCauseRef)*100)})</strong>${cmpC3}.${cliTrail}`;
   }
@@ -1426,7 +1838,7 @@ function parseInjetWorkbook(workbook, fileName){
     }
     const products = [];
     for (let r = 5; r < rowsRes.length; r++) {
-      const p = String(rowsRes[r][0] || "").trim();
+      const p = formatSapHyphen(String(rowsRes[r][0] || "").trim());
       if (!p || p === "TOTAL GERAL") continue;
       products.push({
         produto: p,
@@ -1438,7 +1850,7 @@ function parseInjetWorkbook(workbook, fileName){
     }
     const items = [];
     for (let r = 5; r < rowsBas.length; r++) {
-      const p = String(rowsBas[r][0] || "").trim();
+      const p = formatSapHyphen(String(rowsBas[r][0] || "").trim());
       if (!p) continue;
       items.push({
         produto: p,
@@ -1532,7 +1944,7 @@ function parseInjetWorkbook(workbook, fileName){
   const products = [];
   const items = [];
   rawProducts.forEach(p => {
-    const fullProd = p.prodLines.join(" ").replace(/\s+/g, " ").trim();
+    const fullProd = formatSapHyphen(p.prodLines.join(" ").replace(/\s+/g, " ").trim());
     products.push({
       produto: fullProd,
       qtdProd: p.qtdProd,
@@ -1874,6 +2286,20 @@ $('#sel-client').onchange = (e) => {
 };
 $('#sel-window').onchange = (e) => {
   SELECTED_WINDOW = e.target.value || 'CUMULATIVE';
+  $('#custom-dates-wrap').style.display = SELECTED_WINDOW === 'CUSTOM' ? 'inline-flex' : 'none';
+  renderAll();
+};
+$('#btn-apply-dates').onclick = () => {
+  const d1 = $('#inp-date-ini').value;
+  const d2 = $('#inp-date-fim').value;
+  if (!d1 || !d2) return;
+  if (d2 < d1) {
+    alert('A data final deve ser igual ou posterior à data inicial.');
+    return;
+  }
+  CUSTOM_DATE_INI = d1;
+  CUSTOM_DATE_FIM = d2;
+  SELECTED_WINDOW = 'CUSTOM';
   renderAll();
 };
 
